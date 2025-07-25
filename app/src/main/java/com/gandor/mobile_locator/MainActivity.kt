@@ -1,16 +1,22 @@
 package com.gandor.mobile_locator
 
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -24,12 +30,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.gandor.mobile_locator.composables.MainComposable
+import com.gandor.mobile_locator.managers.InitializeManager
 import com.gandor.mobile_locator.managers.LocationManager
 import com.gandor.mobile_locator.ui.theme.Mobile_locatorTheme
 import com.gandor.mobile_locator.managers.PermissionManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +54,10 @@ class MainActivity : ComponentActivity() {
 
         PermissionManager.registerPermissions(this)
         PermissionManager.requestLocationPermission()
+
+        InitializeManager(this).apply {
+            initializeOpenStreetMapConfigs()
+        }
 
         setContent {
             Mobile_locatorTheme {
@@ -48,65 +68,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainComposable(this)
                 }
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-}
-
-@Composable
-fun MainComposable(mainActivity: MainActivity) {
-    val scope = rememberCoroutineScope()
-    val latitude = remember { mutableStateOf(0.00) }
-    val longitude = remember { mutableStateOf(0.00) }
-    val loading = remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.padding(15.dp),
-    ) {
-        Column {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (loading.value) {
-                CircularProgressIndicator()
-            } else {
-                Text(text = "Latitude: ${latitude.value}")
-                Text(text = "Longitude: ${longitude.value}")
-            }
-        }
-
-        Column(
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        loading.value = true
-                        val location = LocationManager(mainActivity).getCurrentLocation()
-                        delay(1000) // give the user some time for their eyes to breath
-
-                        if (location != null) {
-                            latitude.value = location.latitude
-                            longitude.value = location.longitude
-                        }
-
-                        loading.value = false
-                    }
-                }) {
-                Text(text = "Show Coordinates")
-            }
-
-            Button(
-                onClick = {
-                    latitude.value = 0.00
-                    longitude.value = 0.00
-                }) {
-                Text(text = "Clear")
             }
         }
     }

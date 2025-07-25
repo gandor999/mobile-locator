@@ -18,7 +18,7 @@ class LocationManager(private val mainActivity: MainActivity) {
     suspend fun getCurrentLocation(): Location? {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity)
 
-        if (!PermissionManager.isCoarseLocationGranted() && !PermissionManager.isFineLocationGranted()) {
+        if (!PermissionManager.isAllNeededRequiredPermissionsGranted()) {
             if (!PermissionManager.isNotAllowedToAskAgain()) {
                 PermissionManager.promptRequiredPermissions()
             }

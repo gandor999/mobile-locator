@@ -12,12 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gandor.mobile_locator.MainActivity
-import kotlinx.coroutines.CompletableDeferred
 
 object PermissionManager {
     private lateinit var mainActivity: MainActivity
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
-    var alreadyShowedPromptRequire = false
+    private var alreadyShowedPromptRequire = false
 
     fun registerPermissions(mainActivity: MainActivity) {
         this.mainActivity = mainActivity
@@ -26,40 +25,47 @@ object PermissionManager {
         ) { permissions ->
 
             val granted =
-                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                        permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+                && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
             if (!granted) {
-                Toast.makeText(mainActivity, "Location permission denied", Toast.LENGTH_SHORT)
+                Toast.makeText(mainActivity, "Required permissions denied", Toast.LENGTH_SHORT)
                     .show()
             }
         }
     }
 
-    fun isFineLocationGranted(): Boolean {
+    private fun isFineLocationGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             mainActivity,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun isCoarseLocationGranted(): Boolean {
+    private fun isCoarseLocationGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             mainActivity,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    fun isAllNeededRequiredPermissionsGranted(): Boolean {
+        return isCoarseLocationGranted() && isFineLocationGranted()
+    }
+
     fun isNotAllowedToAskAgain(): Boolean {
-        val isGranted = isFineLocationGranted() && isCoarseLocationGranted()
+        val isAllNeededRequiredPermissionsGranted = isAllNeededRequiredPermissionsGranted()
         val canAskAgain = ActivityCompat.shouldShowRequestPermissionRationale(
             mainActivity,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) && ActivityCompat.shouldShowRequestPermissionRationale(
             mainActivity,
             Manifest.permission.ACCESS_FINE_LOCATION
+        ) && ActivityCompat.shouldShowRequestPermissionRationale(
+            mainActivity,
+            Manifest.permission.INTERNET
         )
-        return isGranted && canAskAgain
+        return isAllNeededRequiredPermissionsGranted && canAskAgain
     }
 
     fun promptRequiredPermissions() {
