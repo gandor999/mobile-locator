@@ -10,11 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.gandor.mobile_locator.managers.LocationManager
 import com.gandor.mobile_locator.ui.theme.Mobile_locatorTheme
+import com.gandor.mobile_locator.managers.PermissionManager
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PermissionManager.registerPermissions(this)
+        PermissionManager.requestLocationPermission()
+
         setContent {
             Mobile_locatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,6 +33,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        LocationManager(this).getCurrentLocation()
     }
 }
 
