@@ -1,44 +1,52 @@
 package com.gandor.mobile_locator.managers
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
+import androidx.activity.compose.setContent
+import androidx.compose.material3.Text
 import com.gandor.mobile_locator.MainActivity
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class LocationManager(private val mainActivity: MainActivity) {
     @SuppressLint("MissingPermission")
-    fun getCurrentLocation(): Pair<String, String> {
+    suspend fun getCurrentLocation(): Location? {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity)
-
-        Log.d("GEO TEST", "getLastLocation")
 
         if (!PermissionManager.isCoarseLocationGranted() && !PermissionManager.isFineLocationGranted()) {
             if (!PermissionManager.isNotAllowedToAskAgain()) {
                 PermissionManager.promptRequiredPermissions()
             }
 
-            return Pair("", "")
+            return null
         }
 
         val cancellationTokenSource = CancellationTokenSource()
 
-        fusedLocationClient.getCurrentLocation(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            cancellationTokenSource.token
-        ).addOnSuccessListener { location ->
-            if (location != null) {
-                val lat = location.latitude
-                val lon = location.longitude
-                Log.d("GEO TEST", "Lat: $lat, Lon: $lon")
-            } else {
-                Log.d("GEO TEST", "Location is null (GPS may be off or no prior fix)")
-            }
-        }.addOnFailureListener {
-            Log.e("GEO TEST", "Failed to get location", it)
-        }
+        return suspendCancellableCoroutine { cont ->
+            fusedLocationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                cancellationTokenSource.token
+            ).addOnSuccessListener {
+                if (it != null) {
+                    val lat = it.latitude
+                    val lon = it.longitude
+                    Log.d("GEO TEST", "Lat: $lat, Lon: $lon")
+                } else {
+                    Log.d("GEO TEST", "Location is null (GPS may be off or no prior fix)")
+                }
 
-        return Pair("", "")
+                cont.resume(it)
+
+            }.addOnFailureListener {
+                Log.e("GEO TEST", "Failed to get location", it)
+                cont.resumeWithException(it)
+            }
+        }
     }
 }
