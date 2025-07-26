@@ -1,6 +1,7 @@
-package com.gandor.mobile_locator.managers
+package com.gandor.mobile_locator.layers.data.managers
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,12 +15,10 @@ import androidx.core.content.ContextCompat
 import com.gandor.mobile_locator.MainActivity
 
 object PermissionManager {
-    private lateinit var mainActivity: MainActivity
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var alreadyShowedPromptRequire = false
 
     fun registerPermissions(mainActivity: MainActivity) {
-        this.mainActivity = mainActivity
         locationPermissionLauncher = mainActivity.registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -35,52 +34,52 @@ object PermissionManager {
         }
     }
 
-    private fun isFineLocationGranted(): Boolean {
+    private fun isFineLocationGranted(activity: Activity): Boolean {
         return ContextCompat.checkSelfPermission(
-            mainActivity,
+            activity,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun isCoarseLocationGranted(): Boolean {
+    private fun isCoarseLocationGranted(activity: Activity): Boolean {
         return ContextCompat.checkSelfPermission(
-            mainActivity,
+            activity,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun isAllNeededRequiredPermissionsGranted(): Boolean {
-        return isCoarseLocationGranted() && isFineLocationGranted()
+    fun isAllNeededRequiredPermissionsGranted(activity: Activity): Boolean {
+        return isCoarseLocationGranted(activity) && isFineLocationGranted(activity)
     }
 
-    fun isNotAllowedToAskAgain(): Boolean {
-        val isAllNeededRequiredPermissionsGranted = isAllNeededRequiredPermissionsGranted()
+    fun isNotAllowedToAskAgain(activity: Activity): Boolean {
+        val isAllNeededRequiredPermissionsGranted = isAllNeededRequiredPermissionsGranted(activity)
         val canAskAgain = ActivityCompat.shouldShowRequestPermissionRationale(
-            mainActivity,
+            activity,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) && ActivityCompat.shouldShowRequestPermissionRationale(
-            mainActivity,
+            activity,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) && ActivityCompat.shouldShowRequestPermissionRationale(
-            mainActivity,
+            activity,
             Manifest.permission.INTERNET
         )
         return isAllNeededRequiredPermissionsGranted && canAskAgain
     }
 
-    fun promptRequiredPermissions() {
+    fun promptRequiredPermissions(activity: Activity) {
         if (!alreadyShowedPromptRequire) {
-            AlertDialog.Builder(mainActivity)
+            AlertDialog.Builder(activity)
                 .setTitle("Permission required")
                 .setMessage("Location permission was permanently denied. Please enable it manually in app settings. Enable also 'precise' location.")
                 .setPositiveButton("Open Settings") { _, _ ->
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", mainActivity.packageName, null)
+                    val uri = Uri.fromParts("package", activity.packageName, null)
                     intent.data = uri
-                    mainActivity.startActivity(intent)
+                    activity.startActivity(intent)
                 }
                 .setNegativeButton("Cancel") { _, _ ->
-                    mainActivity.finishAffinity() // 👈 closes the app
+                    activity.finishAffinity() // 👈 closes the app
                 }
                 .show()
 
@@ -90,8 +89,8 @@ object PermissionManager {
         }
     }
 
-    fun requestLocationPermission() {
-        if (!isCoarseLocationGranted() && !isFineLocationGranted()) {
+    fun requestLocationPermission(activity: Activity) {
+        if (!isCoarseLocationGranted(activity) && !isFineLocationGranted(activity)) {
             locationPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,

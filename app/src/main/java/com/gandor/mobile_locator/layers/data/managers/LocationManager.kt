@@ -1,11 +1,9 @@
-package com.gandor.mobile_locator.managers
+package com.gandor.mobile_locator.layers.data.managers
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.location.Location
 import android.util.Log
-import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
-import com.gandor.mobile_locator.MainActivity
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -13,14 +11,14 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class LocationManager(private val mainActivity: MainActivity) {
+class LocationManager() {
     @SuppressLint("MissingPermission")
-    suspend fun getCurrentLocation(): Location? {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity)
+    suspend fun getCurrentLocation(activity: Activity): Location? {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
-        if (!PermissionManager.isAllNeededRequiredPermissionsGranted()) {
-            if (!PermissionManager.isNotAllowedToAskAgain()) {
-                PermissionManager.promptRequiredPermissions()
+        if (!PermissionManager.isAllNeededRequiredPermissionsGranted(activity)) {
+            if (!PermissionManager.isNotAllowedToAskAgain(activity)) {
+                PermissionManager.promptRequiredPermissions(activity)
             }
 
             return null

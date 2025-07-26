@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.ui.theme
+package com.gandor.mobile_locator.layers.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.composables
+package com.gandor.mobile_locator.layers.ui.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

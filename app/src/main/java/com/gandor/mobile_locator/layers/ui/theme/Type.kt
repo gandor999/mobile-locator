@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.ui.theme
+package com.gandor.mobile_locator.layers.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
