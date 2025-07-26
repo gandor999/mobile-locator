@@ -1,5 +1,6 @@
 package com.gandor.mobile_locator.layers.ui.composables
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.ui.ButtonTextConstants
 import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun ActionButtonsPanel(
     mainViewModel: MainViewModel
 ) {
-    val localActivity = LocalContext.current as? Activity
+    val activity = LocalContext.current as? Activity
 
     LazyColumn(
         verticalArrangement = Arrangement.Bottom,
@@ -27,8 +29,8 @@ fun ActionButtonsPanel(
         item {
             Button(
                 onClick = {
-                    if (localActivity != null) {
-                        mainViewModel.showCoordinates(localActivity)
+                    if (activity != null) {
+                        mainViewModel.showCoordinates(activity)
                     }
                 }) {
                 Text(text = ButtonTextConstants.SHOW_COORDINATES)
@@ -36,8 +38,8 @@ fun ActionButtonsPanel(
 
             Button(
                 onClick = {
-                    if (localActivity != null) {
-                        mainViewModel.openCoordinatesWithGoogle(localActivity)
+                    if (activity != null) {
+                        mainViewModel.openCoordinatesWithGoogle(activity)
                     }
                 }) {
                 Text(text = ButtonTextConstants.OPEN_IN_GOOGLE_MAPS)
