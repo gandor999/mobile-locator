@@ -12,11 +12,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 
 @Composable
-fun CopyCoordinatesLatitude(latitude: String, iconSize: Dp) {
+fun CopyCoordinates(latitude: String, longitude: String, iconSize: Dp) {
     val clipboardManager = LocalClipboardManager.current
 
     IconButton(onClick = {
-        clipboardManager.setText(AnnotatedString(latitude))
+        clipboardManager.setText(AnnotatedString("$latitude, $longitude"))
     },
         modifier = Modifier
             .size(iconSize)

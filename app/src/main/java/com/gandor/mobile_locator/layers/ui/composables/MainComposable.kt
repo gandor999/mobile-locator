@@ -12,6 +12,11 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
 fun MainComposable(
     mainViewModel: MainViewModel = viewModel()
 ) {
+    // add verify token from email for password change on forget or username on forget
+    // add forgot password page
+    // add register page
+    // add login page if 
+    // add main menu
     Column(
         modifier = Modifier.padding(15.dp),
     ) {

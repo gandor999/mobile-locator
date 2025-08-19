@@ -1,12 +1,9 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.compose.runtime.MutableState
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
@@ -19,6 +16,7 @@ import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import androidx.core.net.toUri
+import com.gandor.mobile_locator.layers.data.constants.ConstantMessages
 import com.gandor.mobile_locator.layers.ui.MarkerConstants
 import com.gandor.mobile_locator.layers.ui.states.MapState
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -73,6 +71,7 @@ class MainViewModel : ViewModel(), MapListener {
             setIsShowCoordinatesClicked(true)
             setIsLoading(true)
             val location = LocationManager.getCurrentLocation(activity)
+
             delay(1000) // give the user some time for their eyes to breath
 
             if (location != null) {
@@ -90,7 +89,12 @@ class MainViewModel : ViewModel(), MapListener {
         activity: Activity
     ) {
         val uri =
-            "https://www.google.com/maps/search/?api=1&query=${_mapState.value.latitude},${_mapState.value.longitude}".toUri()
+            (
+                ConstantMessages.GOOGLE_OPEN_LOCATION_URI +
+                "${_mapState.value.latitude}," +
+                "${_mapState.value.longitude}"
+            )
+                .toUri()
         val intent = Intent(Intent.ACTION_VIEW, uri)
         activity.startActivity(intent)
     }
