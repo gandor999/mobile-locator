@@ -8,7 +8,7 @@ import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import com.gandor.mobile_locator.layers.ui.states.LocationManagerState
+import com.gandor.mobile_locator.layers.ui.viewmodels.states.LocationManagerState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

@@ -1,11 +1,11 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
-import androidx.lifecycle.ViewModel
-import com.gandor.mobile_locator.layers.ui.states.RegisterState
+import com.gandor.mobile_locator.layers.data.constants.exceptions.InvalidEmail
+import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class RegisterViewModel: ViewModel() {
+class RegisterViewModel: BaseViewModel() {
     private val _registerState = MutableStateFlow(RegisterState())
     val registerState = _registerState.asStateFlow()
 
@@ -27,5 +27,10 @@ class RegisterViewModel: ViewModel() {
     fun setAndroidId(androidId: String) {
         _registerState.value =
             _registerState.value.copy(androidId = androidId)
+    }
+
+    fun submit() {
+
+//        throwError(InvalidEmail())
     }
 }

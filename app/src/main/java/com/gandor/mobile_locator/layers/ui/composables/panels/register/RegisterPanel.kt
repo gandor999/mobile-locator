@@ -12,8 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,12 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
+import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableException
+import com.gandor.mobile_locator.layers.data.constants.exceptions.InvalidEmail
+import com.gandor.mobile_locator.layers.ui.viewmodels.ErrorDialogViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterPanel(
-    registerViewModel: RegisterViewModel
+    registerViewModel: RegisterViewModel,
 ) {
     val registerState = registerViewModel.registerState.collectAsState()
 
@@ -75,7 +76,9 @@ fun RegisterPanel(
         Spacer(modifier = Modifier.height((ConstantNumbers.SPACER_HEIGHT * 2).dp))
 
         Button(
-            onClick = {}
+            onClick = {
+                registerViewModel.submit()
+            }
         ) {
             Text(ConstantStrings.SUBMIT)
         }

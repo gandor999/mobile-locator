@@ -10,8 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.ui.MarkerConstants
-import com.gandor.mobile_locator.layers.ui.states.MainCoordinatePanelState
-import com.gandor.mobile_locator.layers.ui.states.MapState
+import com.gandor.mobile_locator.layers.ui.viewmodels.states.MainCoordinatePanelState
+import com.gandor.mobile_locator.layers.ui.viewmodels.states.MapState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +24,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
-class CoordinatesViewModel : ViewModel(), MapListener {
+class CoordinatesViewModel : BaseViewModel(), MapListener {
     private val _mainCoordinatePanelState = MutableStateFlow(MainCoordinatePanelState())
     private val _mapState = MutableStateFlow(MapState())
     val mainCoordinatePanelState = _mainCoordinatePanelState.asStateFlow()

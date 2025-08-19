@@ -3,19 +3,21 @@ package com.gandor.mobile_locator.layers.ui.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
-import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
+import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
 import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.ErrorDialogViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 
 @Composable
 fun MainComposable(
     coordinatesViewModel: CoordinatesViewModel = viewModel(),
-    registerViewModel: RegisterViewModel = viewModel()
+    registerViewModel: RegisterViewModel = viewModel(),
 ) {
     // add verify token from email for password change on forget or username on forget
     // add forgot password page
@@ -25,6 +27,12 @@ fun MainComposable(
     Column(
         modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
     ) {
+        val errorDialogState = ErrorDialogViewModel.errorDialogState.collectAsState()
+
+        if (errorDialogState.value.openErrorDialog) {
+            ErrorDialog(ErrorDialogViewModel)
+        }
+
         RegisterPanel(registerViewModel)
 //        CoordinatesPanel(coordinatesViewModel)
     }

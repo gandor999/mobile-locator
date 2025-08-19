@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.ui.states
+package com.gandor.mobile_locator.layers.ui.viewmodels.states
 
 data class MainCoordinatePanelState(
     val isLoading: Boolean = false,

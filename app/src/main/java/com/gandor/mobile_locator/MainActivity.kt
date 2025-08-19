@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.gandor.mobile_locator.layers.data.managers.GlobalErrorManager
 import com.gandor.mobile_locator.layers.data.managers.InitializeManager
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
@@ -18,6 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // TODO: revisit how unhandled exceptions should be handled
+//        Thread.setDefaultUncaughtExceptionHandler(GlobalErrorManager)
         PermissionManager.registerPermissions(this)
         PermissionManager.requestLocationPermission(this)
         LocationManager.setFusedLocationClient(this)
