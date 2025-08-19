@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.ui.composables
+package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -12,12 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.ui.ButtonTextConstants
-import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun ActionButtonsPanel(
-    mainViewModel: MainViewModel
+    coordinatesViewModel: CoordinatesViewModel
 ) {
     val activity = LocalContext.current as? Activity
 
@@ -30,7 +30,7 @@ fun ActionButtonsPanel(
             Button(
                 onClick = {
                     if (activity != null) {
-                        mainViewModel.showCoordinates(activity)
+                        coordinatesViewModel.showCoordinates(activity)
                     }
                 }) {
                 Text(text = ButtonTextConstants.SHOW_COORDINATES)
@@ -39,7 +39,7 @@ fun ActionButtonsPanel(
             Button(
                 onClick = {
                     if (activity != null) {
-                        mainViewModel.openCoordinatesWithGoogle(activity)
+                        coordinatesViewModel.openCoordinatesWithGoogle(activity)
                     }
                 }) {
                 Text(text = ButtonTextConstants.OPEN_IN_GOOGLE_MAPS)

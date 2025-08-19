@@ -1,8 +1,7 @@
-package com.gandor.mobile_locator.layers.ui.composables
+package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.LocaleManager
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,14 +19,8 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
-import com.gandor.mobile_locator.layers.ui.MarkerConstants
-import com.gandor.mobile_locator.layers.ui.states.LocationManagerState
-import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
@@ -35,11 +28,11 @@ import org.osmdroid.views.overlay.Marker
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun OpenStreetMapView(
-    mainViewModel: MainViewModel
+    coordinatesViewModel: CoordinatesViewModel
 ) {
     val markerRef = remember { mutableStateOf<Marker?>(null) }
 
-    val mapState by mainViewModel.mapState.collectAsState()
+    val mapState by coordinatesViewModel.mapState.collectAsState()
     val locationManagerState by LocationManager.locationManagerState.collectAsState()
 
     val configuration = LocalConfiguration.current
@@ -53,13 +46,13 @@ fun OpenStreetMapView(
         if (lastOrientation != currentOrientation && isLocationUpdatesStarted) {
             lastOrientation = currentOrientation
             if (context is Activity) {
-                mainViewModel.showCoordinates(context)
+                coordinatesViewModel.showCoordinates(context)
             }
         }
 
         LocationManager.locationFlow.collect { location ->
             location?.let {
-                mainViewModel.setCoordinates(it.latitude, it.longitude)
+                coordinatesViewModel.setCoordinates(it.latitude, it.longitude)
                 Log.d("GEO TEST", "Location update received: ${it.latitude}, ${it.longitude}")
             }
         }
@@ -74,7 +67,7 @@ fun OpenStreetMapView(
             factory = { context ->
                 MapView(context).apply {
                     markerRef.value = Marker(this)
-                    mainViewModel.handleMapViewPositioning(this, markerRef)
+                    coordinatesViewModel.handleMapViewPositioning(this, markerRef)
                 }
             },
             update = {

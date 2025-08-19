@@ -6,11 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
+import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
+import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
+import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
 @Composable
 fun MainComposable(
-    mainViewModel: MainViewModel = viewModel()
+    coordinatesViewModel: CoordinatesViewModel = viewModel()
 ) {
     // add verify token from email for password change on forget or username on forget
     // add forgot password page
@@ -18,10 +21,9 @@ fun MainComposable(
     // add login page if 
     // add main menu
     Column(
-        modifier = Modifier.padding(15.dp),
+        modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
     ) {
-        MainCoordinatesPanel(mainViewModel)
-        ActionButtonsPanel(mainViewModel)
+        RegisterPanel()
+//        CoordinatesPanel(coordinatesViewModel)
     }
 }
-

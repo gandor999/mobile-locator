@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.compose.runtime.MutableState
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gandor.mobile_locator.layers.data.constants.ConstantMessages
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
+import com.gandor.mobile_locator.layers.ui.MarkerConstants
 import com.gandor.mobile_locator.layers.ui.states.MainCoordinatePanelState
+import com.gandor.mobile_locator.layers.ui.states.MapState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,16 +19,12 @@ import kotlinx.coroutines.launch
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
-import androidx.core.net.toUri
-import com.gandor.mobile_locator.layers.data.constants.ConstantMessages
-import com.gandor.mobile_locator.layers.ui.MarkerConstants
-import com.gandor.mobile_locator.layers.ui.states.MapState
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
-class MainViewModel : ViewModel(), MapListener {
+class CoordinatesViewModel : ViewModel(), MapListener {
     private val _mainCoordinatePanelState = MutableStateFlow(MainCoordinatePanelState())
     private val _mapState = MutableStateFlow(MapState())
     val mainCoordinatePanelState = _mainCoordinatePanelState.asStateFlow()

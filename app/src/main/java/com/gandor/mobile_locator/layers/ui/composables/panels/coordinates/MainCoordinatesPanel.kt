@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.ui.composables
+package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,14 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.gandor.mobile_locator.layers.ui.viewmodels.MainViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
 @Composable
 fun MainCoordinatesPanel(
-    mainViewModel: MainViewModel
+    coordinatesViewModel: CoordinatesViewModel
 ) {
-    val mainCoordinatePanelState by mainViewModel.mainCoordinatePanelState.collectAsState()
-    val mapState by mainViewModel.mapState.collectAsState()
+    val mainCoordinatePanelState by coordinatesViewModel.mainCoordinatePanelState.collectAsState()
+    val mapState by coordinatesViewModel.mapState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -70,7 +70,7 @@ fun MainCoordinatesPanel(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OpenStreetMapView(mainViewModel)
+            OpenStreetMapView(coordinatesViewModel)
         }
     }
 }

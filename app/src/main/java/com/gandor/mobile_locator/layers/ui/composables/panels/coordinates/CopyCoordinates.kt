@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.ui.composables
+package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -23,7 +23,7 @@ fun CopyCoordinates(latitude: String, longitude: String, iconSize: Dp) {
     ) {
         Icon(
             imageVector = Icons.Filled.ContentCopy,
-            contentDescription = "Copy Latitude"
+            contentDescription = "Copy Latitude and Longitude"
         )
     }
 }
