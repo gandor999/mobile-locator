@@ -13,7 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gandor.mobile_locator.MainActivity
-import com.gandor.mobile_locator.layers.data.constants.ConstantMessages
+import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 
 object PermissionManager {
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
@@ -29,7 +29,7 @@ object PermissionManager {
                 && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
             if (!granted) {
-                Toast.makeText(mainActivity, ConstantMessages.PERMISSION_REQUIRED_DENIED, Toast.LENGTH_SHORT)
+                Toast.makeText(mainActivity, ConstantStrings.PERMISSION_REQUIRED_DENIED, Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -71,15 +71,15 @@ object PermissionManager {
     fun promptRequiredPermissions(activity: Activity) {
         if (!alreadyShowedPromptRequire) {
             AlertDialog.Builder(activity)
-                .setTitle(ConstantMessages.PERMISSION_REQUIRED)
-                .setMessage(ConstantMessages.PERMISSION_REQUIRED_LOCATION_MESSAGE)
-                .setPositiveButton(ConstantMessages.OPEN_SETTINGS) { _, _ ->
+                .setTitle(ConstantStrings.PERMISSION_REQUIRED)
+                .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
+                .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", activity.packageName, null)
                     intent.data = uri
                     activity.startActivity(intent)
                 }
-                .setNegativeButton(ConstantMessages.CANCEL) { _, _ ->
+                .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
                     activity.finishAffinity() // 👈 closes the app
                 }
                 .show()

@@ -10,10 +10,12 @@ import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
 import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 
 @Composable
 fun MainComposable(
-    coordinatesViewModel: CoordinatesViewModel = viewModel()
+    coordinatesViewModel: CoordinatesViewModel = viewModel(),
+    registerViewModel: RegisterViewModel = viewModel()
 ) {
     // add verify token from email for password change on forget or username on forget
     // add forgot password page
@@ -23,7 +25,7 @@ fun MainComposable(
     Column(
         modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
     ) {
-        RegisterPanel()
+        RegisterPanel(registerViewModel)
 //        CoordinatesPanel(coordinatesViewModel)
     }
 }

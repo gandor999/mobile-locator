@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
 @Composable
@@ -35,7 +36,7 @@ fun MainCoordinatesPanel(
             .fillMaxHeight(0.75f)
 //                .border(2.dp, Color.Red)
     ) {
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
 
         if (mainCoordinatePanelState.isLoading) {
             Box(
@@ -68,7 +69,7 @@ fun MainCoordinatesPanel(
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
 
             OpenStreetMapView(coordinatesViewModel)
         }

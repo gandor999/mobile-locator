@@ -7,7 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gandor.mobile_locator.layers.data.constants.ConstantMessages
+import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.ui.MarkerConstants
 import com.gandor.mobile_locator.layers.ui.states.MainCoordinatePanelState
@@ -90,7 +90,7 @@ class CoordinatesViewModel : ViewModel(), MapListener {
     ) {
         val uri =
             (
-                ConstantMessages.GOOGLE_OPEN_LOCATION_URI +
+                ConstantStrings.GOOGLE_OPEN_LOCATION_URI +
                 "${_mapState.value.latitude}," +
                 "${_mapState.value.longitude}"
             )
