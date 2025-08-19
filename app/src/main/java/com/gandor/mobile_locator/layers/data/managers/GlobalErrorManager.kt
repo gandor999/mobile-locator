@@ -1,7 +1,5 @@
 package com.gandor.mobile_locator.layers.data.managers
 
-import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableException
-
 object GlobalErrorManager: Thread.UncaughtExceptionHandler {
     override fun uncaughtException(p0: Thread, p1: Throwable) {
 //        when(p1) {

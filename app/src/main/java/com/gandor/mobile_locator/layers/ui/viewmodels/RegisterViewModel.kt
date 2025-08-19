@@ -1,6 +1,5 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
-import com.gandor.mobile_locator.layers.data.constants.exceptions.InvalidEmail
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

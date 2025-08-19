@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
