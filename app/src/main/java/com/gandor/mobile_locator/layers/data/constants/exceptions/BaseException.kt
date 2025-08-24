@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.data.exceptions
+package com.gandor.mobile_locator.layers.data.constants.exceptions
 
 data class ServiceExceptionResponseMulti(
     val status: Int,

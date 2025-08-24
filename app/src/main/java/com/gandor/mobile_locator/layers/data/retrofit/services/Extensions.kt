@@ -1,6 +1,6 @@
 package com.gandor.mobile_locator.layers.data.retrofit.services
 
-import com.gandor.mobile_locator.layers.data.exceptions.ServiceExceptionResponseMulti
+import com.gandor.mobile_locator.layers.data.constants.exceptions.ServiceExceptionResponseMulti
 import com.google.gson.Gson
 import retrofit2.Response
 
