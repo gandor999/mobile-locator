@@ -9,9 +9,9 @@ object ErrorDialogViewModel: ViewModel() {
     private val _errorDialogState = MutableStateFlow(ErrorDialogState())
     val errorDialogState = _errorDialogState.asStateFlow()
 
-    fun showDialog(errorMessage: String) {
+    fun showDialog(errorMessages: List<String>) {
         _errorDialogState.value =
-            _errorDialogState.value.copy(openErrorDialog = true, errorMessage = errorMessage)
+            _errorDialogState.value.copy(openErrorDialog = true, errorMessages = errorMessages)
     }
 
     fun reset() {

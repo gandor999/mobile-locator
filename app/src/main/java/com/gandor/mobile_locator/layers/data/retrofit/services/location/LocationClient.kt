@@ -2,6 +2,7 @@ package com.gandor.mobile_locator.layers.data.retrofit.services.location
 
 import com.gandor.mobile_locator.layers.data.constants.RemoteHosts
 import com.gandor.mobile_locator.layers.data.exceptions.ServiceExceptionResponseMulti
+import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
 import com.google.gson.Gson
 import retrofit2.Response
@@ -16,25 +17,28 @@ object LocationClient {
 
     private val locationService = retrofit.create(LocationService::class.java)
 
-    suspend fun registerNewUser(newUser: User): Response<Unit> {
-        return locationService.registerNewUser(newUser).handleErrors()
+    suspend fun registerNewUser(newUser: User): ApiResult<Unit> {
+        return locationService.registerNewUser(newUser).toApiResult()
     }
 }
 
-fun <T> Response<T>.handleErrors(): Response<T> {
+fun <T> Response<T>.toApiResult(): ApiResult<T> {
     if (isSuccessful) {
-        return this
+        return ApiResult.Success(body())
     }
 
     val errorBody = errorBody()?.string()
-    val serviceExceptionResponseMulti = try {
-        Gson().fromJson(errorBody, ServiceExceptionResponseMulti::class.java)
-    } catch (e: Exception) {
+
+    try {
+        val serviceExceptionResponseMulti = Gson().fromJson(errorBody, ServiceExceptionResponseMulti::class.java) as ServiceExceptionResponseMulti
+        return ApiResult.Fail((serviceExceptionResponseMulti))
+    } catch (e: Throwable) {
         e.printStackTrace()
+        return ApiResult.NetworkFail(e)
     }
 
-    // TODO: do something here for the exception that has been returned
-    println("GEO TEST | locationException: $serviceExceptionResponseMulti")
-
-    return this
+//    // TODO: do something here for the exception that has been returned
+//    println("GEO TEST | locationException: $serviceExceptionResponseMulti")
+//
+//    ErrorDialogViewModel.showDialog((serviceExceptionResponseMulti as ServiceExceptionResponseMulti).status.toString() ?: "")
 }

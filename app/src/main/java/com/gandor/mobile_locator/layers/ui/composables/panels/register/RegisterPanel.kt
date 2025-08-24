@@ -30,8 +30,8 @@ fun RegisterPanel(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .border(2.dp, Color.Red),
+            .fillMaxSize(),
+//            .border(2.dp, Color.Red),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

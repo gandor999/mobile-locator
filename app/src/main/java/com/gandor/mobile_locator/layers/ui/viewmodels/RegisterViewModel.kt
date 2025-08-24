@@ -1,6 +1,7 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.viewModelScope
+import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
@@ -34,13 +35,27 @@ class RegisterViewModel: BaseViewModel() {
 
     fun submit() {
         viewModelScope.launch {
-            LocationClient.registerNewUser(
+            val result = LocationClient.registerNewUser(
                 User(
                     username = _registerState.value.username,
                     password = _registerState.value.password,
                     email = _registerState.value.email,
                 )
             )
+
+            when(result) {
+                is ApiResult.Success -> {
+                    // Do nothing
+                }
+
+                is ApiResult.Fail -> {
+                    ErrorDialogViewModel.showDialog(result.failData.errors.map { it.message })
+                }
+
+                is ApiResult.NetworkFail -> {
+                    ErrorDialogViewModel.showDialog(listOf(result.exception.message ?: "ApiResult.NetworkFail has no error message please raise issue with developer"))
+                }
+            }
         }
     }
 }

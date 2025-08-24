@@ -5,6 +5,6 @@ import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableExce
 
 open class BaseViewModel: ViewModel(), ErrorThrower {
     override fun throwError(composableException: ComposableException) {
-        ErrorDialogViewModel.showDialog(composableException.message.toString())
+//        ErrorDialogViewModel.showDialog(composableException.message.toString())
     }
 }

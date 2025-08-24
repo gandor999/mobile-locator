@@ -34,10 +34,9 @@ fun ErrorDialog(
         title = { Text("Error") },
         text = {
             Column {
-                Text("Error Message: ${errorDialogState.value.errorMessage}")
-//                mutableStates.errorDialogConfig.value.throwable?.let {
-//                    Text("Error Type: " + it::class.simpleName)
-//                }
+                errorDialogState.value.errorMessages.forEach {
+                    Text(it)
+                }
             }
         }
     )
