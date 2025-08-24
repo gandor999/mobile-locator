@@ -1,11 +1,9 @@
 package com.gandor.mobile_locator.layers.data.retrofit.services.location
 
 import com.gandor.mobile_locator.layers.data.constants.RemoteHosts
-import com.gandor.mobile_locator.layers.data.exceptions.ServiceExceptionResponseMulti
 import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
-import com.google.gson.Gson
-import retrofit2.Response
+import com.gandor.mobile_locator.layers.data.retrofit.services.toApiResult
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -22,23 +20,3 @@ object LocationClient {
     }
 }
 
-fun <T> Response<T>.toApiResult(): ApiResult<T> {
-    if (isSuccessful) {
-        return ApiResult.Success(body())
-    }
-
-    val errorBody = errorBody()?.string()
-
-    try {
-        val serviceExceptionResponseMulti = Gson().fromJson(errorBody, ServiceExceptionResponseMulti::class.java) as ServiceExceptionResponseMulti
-        return ApiResult.Fail((serviceExceptionResponseMulti))
-    } catch (e: Throwable) {
-        e.printStackTrace()
-        return ApiResult.NetworkFail(e)
-    }
-
-//    // TODO: do something here for the exception that has been returned
-//    println("GEO TEST | locationException: $serviceExceptionResponseMulti")
-//
-//    ErrorDialogViewModel.showDialog((serviceExceptionResponseMulti as ServiceExceptionResponseMulti).status.toString() ?: "")
-}
