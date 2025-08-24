@@ -1,8 +1,12 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
+import androidx.lifecycle.viewModelScope
+import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
+import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class RegisterViewModel: BaseViewModel() {
     private val _registerState = MutableStateFlow(RegisterState())
@@ -29,7 +33,14 @@ class RegisterViewModel: BaseViewModel() {
     }
 
     fun submit() {
-
-//        throwError(InvalidEmail())
+        viewModelScope.launch {
+            LocationClient.registerNewUser(
+                User(
+                    username = _registerState.value.username,
+                    password = _registerState.value.password,
+                    email = _registerState.value.email,
+                )
+            )
+        }
     }
 }
