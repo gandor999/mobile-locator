@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.osmdroid.config.Configuration
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -37,7 +38,7 @@ object LocationManager {
         )
     }
 
-    fun setFusedLocationClient(context: Context) {
+    fun initialize(context: Context) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context.applicationContext)
 
         locationCallback = object : LocationCallback() {

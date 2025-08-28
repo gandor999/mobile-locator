@@ -10,34 +10,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.gandor.mobile_locator.layers.data.managers.InitializeManager
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.MainComposable
 import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
-
+@RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // TODO: revisit how unhandled exceptions should be handled
-        // TODO: must refactor permission and location manager to survive orientation changes
 //        Thread.setDefaultUncaughtExceptionHandler(GlobalErrorManager)
         PermissionManager.registerPermissions(this)
         PermissionManager.requestLocationPermissions()
-        LocationManager.setFusedLocationClient(this)
-
-        InitializeManager().apply {
-            initializeOpenStreetMapConfigs(this@MainActivity)
-        }
-
-        if (!LocationService.isRunning) {
-            val serviceIntent = Intent(this, LocationService::class.java)
-            startForegroundService(serviceIntent)
-        }
+        startLocationService()
+        CoordinatesViewModel.initializeOpenStreetMapConfigs(this)
 
         setContent {
             Mobile_locatorTheme {
@@ -52,11 +42,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    fun startLocationService() {
+        if (!LocationService.isRunning) {
+            val serviceIntent = Intent(this, LocationService::class.java)
+            startForegroundService(serviceIntent)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (!PermissionManager.isBackgroundLocationGranted(this)) {
             stopService(Intent(this, LocationService::class.java))
+            LocationManager.stopLocationUpdates()
         }
     }
 }

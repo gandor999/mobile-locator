@@ -2,6 +2,7 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
@@ -13,6 +14,7 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.states.MapState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -118,5 +120,16 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
         }
 
         mapView.addMapListener(this)
+    }
+
+    companion object {
+        fun initializeOpenStreetMapConfigs(activity: Activity) {
+            val sharedPrefs = activity.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
+
+            Configuration.getInstance().load(
+                activity,
+                sharedPrefs
+            )
+        }
     }
 }

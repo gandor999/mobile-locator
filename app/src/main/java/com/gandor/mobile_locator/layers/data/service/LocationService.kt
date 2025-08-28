@@ -43,7 +43,7 @@ class LocationService: Service() {
         // This makes the service foreground (persistent)
         startForeground(1, notification)
 
-        LocationManager.setFusedLocationClient(applicationContext)
+        LocationManager.initialize(applicationContext)
 
         isRunning = true
     }
