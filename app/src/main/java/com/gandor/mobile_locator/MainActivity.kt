@@ -1,8 +1,11 @@
 package com.gandor.mobile_locator
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -10,11 +13,13 @@ import androidx.compose.ui.Modifier
 import com.gandor.mobile_locator.layers.data.managers.InitializeManager
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
+import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.MainComposable
 import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,6 +32,9 @@ class MainActivity : ComponentActivity() {
         InitializeManager().apply {
             initializeOpenStreetMapConfigs(this@MainActivity)
         }
+
+        val serviceIntent = Intent(this, LocationService::class.java)
+        startForegroundService(serviceIntent)
 
         setContent {
             Mobile_locatorTheme {
@@ -43,6 +51,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        LocationManager.stopLocationUpdates()
+//        LocationManager.stopLocationUpdates()
+        stopService(Intent(this, LocationService::class.java))
     }
 }

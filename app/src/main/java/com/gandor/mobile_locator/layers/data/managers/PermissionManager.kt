@@ -3,9 +3,11 @@ package com.gandor.mobile_locator.layers.data.managers
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -17,6 +19,7 @@ import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 
 object PermissionManager {
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var backgroundPermissionLauncher: ActivityResultLauncher<String>
     private var alreadyShowedPromptRequire = false
 
     fun registerPermissions(mainActivity: MainActivity) {
@@ -28,29 +31,45 @@ object PermissionManager {
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
                 && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
+            if (granted) {
+                // If Android 10+ → request background permission separately
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    requestBackgroundLocationPermission(mainActivity)
+                }
+            }
+
             if (!granted) {
                 Toast.makeText(mainActivity, ConstantStrings.PERMISSION_REQUIRED_DENIED, Toast.LENGTH_SHORT)
                     .show()
             }
         }
+
+        // Background location launcher
+        backgroundPermissionLauncher = mainActivity.registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (!granted) {
+                Toast.makeText(mainActivity, "Background location denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun isFineLocationGranted(activity: Activity): Boolean {
+    private fun isFineLocationGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
-            activity,
+            context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun isCoarseLocationGranted(activity: Activity): Boolean {
+    private fun isCoarseLocationGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
-            activity,
+            context,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun isAllNeededRequiredPermissionsGranted(activity: Activity): Boolean {
-        return isCoarseLocationGranted(activity) && isFineLocationGranted(activity)
+    fun isAllNeededRequiredPermissionsGranted(context: Context): Boolean {
+        return isCoarseLocationGranted(context) && isFineLocationGranted(context)
     }
 
     fun isNotAllowedToAskAgain(activity: Activity): Boolean {
@@ -98,6 +117,33 @@ object PermissionManager {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+        }
+    }
+
+    private fun isBackgroundLocationGranted(activity: Activity): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        } else true
+    }
+
+    private fun requestBackgroundLocationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (!isBackgroundLocationGranted(activity)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    // On Android 11+ user must go to Settings
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", activity.packageName, null)
+                    )
+                    activity.startActivity(intent)
+                } else {
+                    // Android 10 can still request normally
+                    backgroundPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                }
+            }
         }
     }
 }
