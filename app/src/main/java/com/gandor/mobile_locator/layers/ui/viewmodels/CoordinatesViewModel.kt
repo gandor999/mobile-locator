@@ -10,7 +10,6 @@ import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MainCoordinatePanelState
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MapState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,11 +36,6 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
         _mapState.value =
             _mapState.value.copy(longitude = longitude)
     }
-
-//    private fun setIsLoading(isLoading: Boolean) {
-//        _mainCoordinatePanelState.value =
-//            _mainCoordinatePanelState.value.copy(isLoading = isLoading)
-//    }
 
     private fun setZoomLevel(zoom: Double) {
         _mapState.value =
@@ -70,8 +64,6 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
             setIsLoading(true)
             val location = LocationManager.getCurrentLocation(activity)
 
-//            delay(1000) // give the user some time for their eyes to breath
-
             if (location != null) {
                 setLatitude(location.latitude)
                 setLongitude(location.longitude)
@@ -79,7 +71,7 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
 
             setIsLoading(false)
 
-//            LocationManager.startLocationUpdates(activity, 1000L) // minimum request interval is 1 second
+            LocationManager.startLocationUpdates(activity, 1000)
         }
     }
 

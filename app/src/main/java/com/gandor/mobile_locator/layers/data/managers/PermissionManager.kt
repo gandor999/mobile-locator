@@ -20,33 +20,32 @@ import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 
 object PermissionManager: ViewModel() {
-    private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var backgroundPermissionLauncher: ActivityResultLauncher<String>
-    private var alreadyShowedPromptRequire = false
+    private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     fun registerPermissions(mainActivity: MainActivity) {
-        locationPermissionLauncher = mainActivity.registerForActivityResult(
+        multiplePermissionLauncher = mainActivity.registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-
-            val granted =
-                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
-                && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-
-            if (!granted) {
-                Toast.makeText(mainActivity, ConstantStrings.PERMISSION_REQUIRED_DENIED, Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
+        ){}
 
         // Background location launcher
-        backgroundPermissionLauncher = mainActivity.registerForActivityResult(
+        permissionLauncher = mainActivity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
             if (!granted) {
                 Toast.makeText(mainActivity, "Background location denied", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun requestLocationPermissions() {
+        multiplePermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 
     fun promptBackgroundLocation(activity: Activity) {
@@ -56,7 +55,7 @@ object PermissionManager: ViewModel() {
                 .setMessage("To track your location continuously, please allow background location access.")
                 .setPositiveButton("Allow") { _, _ ->
                     // Request permission
-                    backgroundPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    permissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 }
                 .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()
@@ -99,38 +98,15 @@ object PermissionManager: ViewModel() {
     }
 
     fun promptRequiredPermissions(activity: Activity) {
-        if (!alreadyShowedPromptRequire) {
-            AlertDialog.Builder(activity)
-                .setTitle(ConstantStrings.PERMISSION_REQUIRED)
-                .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
-                .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", activity.packageName, null)
-                    intent.data = uri
-                    activity.startActivity(intent)
-                }
-                .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
-                    activity.finishAffinity() // 👈 closes the app
-                }
-                .show()
-
-            alreadyShowedPromptRequire = true
-
-            return
-        }
-    }
-
-    fun requestLocationPermission(activity: Activity) {
-        if (!isCoarseLocationGranted(activity) && !isFineLocationGranted(activity)) {
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-        }
-
-        requestBackgroundLocationPermission(activity)
+        AlertDialog.Builder(activity)
+            .setTitle(ConstantStrings.PERMISSION_REQUIRED)
+            .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
+            .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
+                openAppPermissionSettings(activity)
+            }
+            .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
+            }
+            .show()
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -147,5 +123,12 @@ object PermissionManager: ViewModel() {
                 promptBackgroundLocation(activity)
             }
         }
+    }
+
+    fun openAppPermissionSettings(context: Context) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", context.packageName, null)
+        intent.data = uri
+        context.startActivity(intent)
     }
 }

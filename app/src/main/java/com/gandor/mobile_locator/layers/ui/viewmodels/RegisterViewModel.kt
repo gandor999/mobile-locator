@@ -7,7 +7,6 @@ import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

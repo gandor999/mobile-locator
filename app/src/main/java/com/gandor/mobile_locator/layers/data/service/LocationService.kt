@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
-import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -51,16 +50,10 @@ class LocationService: Service() {
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        LocationManager.startLocationUpdates(applicationContext, 1000L)
+//        LocationManager.startLocationUpdates(applicationContext, 1000L)
         val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
         serviceScope.launch {
-//            while (isActive) {
-//                val loc = LocationManager.locationFlow.value
-//                Log.d("GEO TEST", "Heartbeat | Latest: $loc")
-//                delay(1000L) // every 1 sec
-//            }
-
             LocationManager.locationFlow.collect { location ->
                 location?.let {
                     Log.d("GEO TEST", "onStartCommand | Location update received: ${it.latitude}, ${it.longitude}")

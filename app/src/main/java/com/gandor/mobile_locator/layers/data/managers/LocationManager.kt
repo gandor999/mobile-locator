@@ -49,18 +49,18 @@ object LocationManager {
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun startLocationUpdates(context: Context, updateIntervalMillis: Long) {
+        if (!PermissionManager.isAllNeededRequiredPermissionsGranted(context)) {
+//            if (context is Activity && !PermissionManager.isNotAllowedToAskAgain(context)) {
+//                PermissionManager.promptRequiredPermissions(context)
+//            }
+
+            return
+        }
+
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
             updateIntervalMillis
         ).build()
-
-        if (!PermissionManager.isAllNeededRequiredPermissionsGranted(context)) {
-            if (context is Activity && !PermissionManager.isNotAllowedToAskAgain(context)) {
-                PermissionManager.promptRequiredPermissions(context)
-            }
-
-            return
-        }
 
         fusedLocationClient.requestLocationUpdates(
             locationRequest,

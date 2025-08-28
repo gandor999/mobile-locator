@@ -3,7 +3,6 @@ package com.gandor.mobile_locator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import com.gandor.mobile_locator.layers.data.managers.InitializeManager
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
@@ -21,7 +19,7 @@ import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
 
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,7 +27,7 @@ class MainActivity : ComponentActivity() {
         // TODO: must refactor permission and location manager to survive orientation changes
 //        Thread.setDefaultUncaughtExceptionHandler(GlobalErrorManager)
         PermissionManager.registerPermissions(this)
-        PermissionManager.requestLocationPermission(this)
+        PermissionManager.requestLocationPermissions()
         LocationManager.setFusedLocationClient(this)
 
         InitializeManager().apply {
