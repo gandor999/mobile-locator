@@ -79,7 +79,7 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
 
             setIsLoading(false)
 
-            LocationManager.startLocationUpdates(activity, 1000L) // minimum request interval is 1 second
+//            LocationManager.startLocationUpdates(activity, 1000L) // minimum request interval is 1 second
         }
     }
 

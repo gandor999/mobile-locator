@@ -12,12 +12,14 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 
-object PermissionManager {
+object PermissionManager: ViewModel() {
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var backgroundPermissionLauncher: ActivityResultLauncher<String>
     private var alreadyShowedPromptRequire = false
@@ -30,13 +32,6 @@ object PermissionManager {
             val granted =
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
                 && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-
-            if (granted) {
-                // If Android 10+ → request background permission separately
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    requestBackgroundLocationPermission(mainActivity)
-                }
-            }
 
             if (!granted) {
                 Toast.makeText(mainActivity, ConstantStrings.PERMISSION_REQUIRED_DENIED, Toast.LENGTH_SHORT)
@@ -51,6 +46,22 @@ object PermissionManager {
             if (!granted) {
                 Toast.makeText(mainActivity, "Background location denied", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun promptBackgroundLocation(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationGranted(activity)) {
+            AlertDialog.Builder(activity)
+                .setTitle("Background Location Permission")
+                .setMessage("To track your location continuously, please allow background location access.")
+                .setPositiveButton("Allow") { _, _ ->
+                    // Request permission
+                    backgroundPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 
@@ -118,31 +129,22 @@ object PermissionManager {
                 )
             )
         }
+
+        requestBackgroundLocationPermission(activity)
     }
 
-    private fun isBackgroundLocationGranted(activity: Activity): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        } else true
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun isBackgroundLocationGranted(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestBackgroundLocationPermission(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!isBackgroundLocationGranted(activity)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    // On Android 11+ user must go to Settings
-                    val intent = Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts("package", activity.packageName, null)
-                    )
-                    activity.startActivity(intent)
-                } else {
-                    // Android 10 can still request normally
-                    backgroundPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                }
+                promptBackgroundLocation(activity)
             }
         }
     }
