@@ -27,7 +27,8 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 fun MainCoordinatesPanel(
     coordinatesViewModel: CoordinatesViewModel
 ) {
-    val mainCoordinatePanelState by coordinatesViewModel.mainCoordinatePanelState.collectAsState()
+//    val mainCoordinatePanelState by coordinatesViewModel.mainCoordinatePanelState.collectAsState()
+    val baseState by coordinatesViewModel.baseState.collectAsState()
     val mapState by coordinatesViewModel.mapState.collectAsState()
 
     Column(
@@ -38,40 +39,41 @@ fun MainCoordinatesPanel(
     ) {
         Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
 
-        if (mainCoordinatePanelState.isLoading) {
+        if (baseState.isLoading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center // 👈 centers both vertically and horizontally
             ) {
                 CircularProgressIndicator()
+                return
             }
-        } else {
-            SelectionContainer {
-                Column {
-                    val textStyle = MaterialTheme.typography.bodyLarge
-                    val fontSize = textStyle.fontSize
+        }
 
-                    val iconSizeDp = with(LocalDensity.current) { fontSize.toDp() }
+        SelectionContainer {
+            Column {
+                val textStyle = MaterialTheme.typography.bodyLarge
+                val fontSize = textStyle.fontSize
 
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Location: ${mapState.latitude}, ${mapState.longitude}")
-                        CopyCoordinates(
-                            mapState.latitude.toString(),
-                            mapState.longitude.toString(),
-                            iconSizeDp
-                        )
-                    }
+                val iconSizeDp = with(LocalDensity.current) { fontSize.toDp() }
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Location: ${mapState.latitude}, ${mapState.longitude}")
+                    CopyCoordinates(
+                        mapState.latitude.toString(),
+                        mapState.longitude.toString(),
+                        iconSizeDp
+                    )
                 }
             }
-
-            Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
-
-            OpenStreetMapView(coordinatesViewModel)
         }
+
+        Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
+
+        OpenStreetMapView(coordinatesViewModel)
     }
 }

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.gandor.mobile_locator.layers.ui.ButtonTextConstants
+import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 
 @SuppressLint("ContextCastToActivity")
@@ -33,7 +33,7 @@ fun ActionButtonsPanel(
                         coordinatesViewModel.showCoordinates(activity)
                     }
                 }) {
-                Text(text = ButtonTextConstants.SHOW_COORDINATES)
+                Text(text = ConstantStrings.CoordinatesConstants.SHOW_COORDINATES)
             }
 
             Button(
@@ -42,7 +42,7 @@ fun ActionButtonsPanel(
                         coordinatesViewModel.openCoordinatesWithGoogle(activity)
                     }
                 }) {
-                Text(text = ButtonTextConstants.OPEN_IN_GOOGLE_MAPS)
+                Text(text = ConstantStrings.CoordinatesConstants.OPEN_IN_GOOGLE_MAPS)
             }
         }
     }

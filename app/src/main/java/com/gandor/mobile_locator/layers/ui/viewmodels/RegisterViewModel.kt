@@ -1,10 +1,13 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.viewModelScope
+import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -35,25 +38,33 @@ class RegisterViewModel: BaseViewModel() {
 
     fun submit() {
         viewModelScope.launch {
+            setIsLoading(true)
+
             val result = LocationClient.registerNewUser(
                 User(
                     username = _registerState.value.username,
                     password = _registerState.value.password,
                     email = _registerState.value.email,
+                    androidId = _registerState.value.androidId
                 )
             )
 
+            setIsLoading(false)
+
             when(result) {
                 is ApiResult.Success -> {
-                    // Do nothing
+                    DialogViewModel.showSuccessDialog(listOf(ConstantStrings.RegistrationConstants.REGISTER_SUCCESS))
+                    // TODO: move to login page
+
+                    PanelHostViewModel.switchPanel(PanelEnum.COORDINATES_PANEL)
                 }
 
                 is ApiResult.Fail -> {
-                    ErrorDialogViewModel.showDialog(result.failData.errors.map { it.message })
+                    DialogViewModel.showErrorDialog(result.failData.errors.map { it.message })
                 }
 
                 is ApiResult.NetworkFail -> {
-                    ErrorDialogViewModel.showDialog(listOf(result.exception.message ?: "ApiResult.NetworkFail has no error message please raise issue with developer"))
+                    DialogViewModel.showErrorDialog(listOf(result.exception.message ?: ConstantStrings.NETWORK_FAIL_NO_MESSAGE))
                 }
             }
         }

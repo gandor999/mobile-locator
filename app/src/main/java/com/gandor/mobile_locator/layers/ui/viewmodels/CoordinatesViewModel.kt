@@ -8,7 +8,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
-import com.gandor.mobile_locator.layers.ui.MarkerConstants
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MainCoordinatePanelState
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MapState
 import kotlinx.coroutines.delay
@@ -39,10 +38,10 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
             _mapState.value.copy(longitude = longitude)
     }
 
-    private fun setIsLoading(isLoading: Boolean) {
-        _mainCoordinatePanelState.value =
-            _mainCoordinatePanelState.value.copy(isLoading = isLoading)
-    }
+//    private fun setIsLoading(isLoading: Boolean) {
+//        _mainCoordinatePanelState.value =
+//            _mainCoordinatePanelState.value.copy(isLoading = isLoading)
+//    }
 
     private fun setZoomLevel(zoom: Double) {
         _mapState.value =
@@ -71,7 +70,7 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
             setIsLoading(true)
             val location = LocationManager.getCurrentLocation(activity)
 
-            delay(1000) // give the user some time for their eyes to breath
+//            delay(1000) // give the user some time for their eyes to breath
 
             if (location != null) {
                 setLatitude(location.latitude)
@@ -122,7 +121,7 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
         marker.value?.apply {
             this.position = position
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            title = MarkerConstants.YOU_ARE_HERE
+            title = ConstantStrings.CoordinatesConstants.YOU_ARE_HERE
             mapView.overlays?.add(this)
         }
 

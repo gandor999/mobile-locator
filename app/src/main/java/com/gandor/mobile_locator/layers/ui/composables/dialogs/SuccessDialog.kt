@@ -14,28 +14,28 @@ import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.viewmodels.DialogViewModel
 
 @Composable
-fun ErrorDialog(
+fun SuccessDialog(
     dialogViewModel: DialogViewModel
 ) {
-    val errorDialogState = dialogViewModel.errorDialogState.collectAsState()
+    val successDialogState = dialogViewModel.successDialogState.collectAsState()
 
     AlertDialog(
         onDismissRequest = {
-            dialogViewModel.resetErrorDialog()
+            dialogViewModel.resetSuccessDialog()
         },
         confirmButton = {
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 TextButton(onClick = {
-                    dialogViewModel.resetErrorDialog()
+                    dialogViewModel.resetSuccessDialog()
                 }) {
                     Text(ConstantStrings.ButtonTextConstants.OK)
                 }
             }
         },
-        title = { Text(ConstantStrings.ButtonTextConstants.ERROR) },
+        title = { Text(ConstantStrings.ButtonTextConstants.SUCCESS) },
         text = {
             Column {
-                errorDialogState.value.errorMessages.forEach {
+                successDialogState.value.successMessages.forEach {
                     Text(it)
                 }
             }

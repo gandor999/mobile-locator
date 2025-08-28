@@ -8,8 +8,25 @@ object ConstantStrings {
     const val OPEN_SETTINGS: String = "Open Settings"
     const val CANCEL: String = "Cancel"
     const val GOOGLE_OPEN_LOCATION_URI: String = "https://www.google.com/maps/search/?api=1&query="
-    const val REGISTER: String = "Register"
-    const val SUBMIT: String = "Submit"
+    const val NETWORK_FAIL_NO_MESSAGE = "NetworkFail has no error message please raise issue with developer"
+
+    object RegistrationConstants {
+        const val REGISTER: String = "Register"
+        const val REGISTER_SUCCESS = "Registration was successful"
+    }
+
+    object CoordinatesConstants {
+        const val SHOW_COORDINATES = "Show Coordinates"
+        const val OPEN_IN_GOOGLE_MAPS = "Open In Google Maps"
+        const val YOU_ARE_HERE = "You Are Here"
+    }
+
+    object ButtonTextConstants {
+        const val SUBMIT: String = "Submit"
+        const val SUCCESS: String = "Success"
+        const val ERROR: String = "Error"
+        const val OK: String = "Ok"
+    }
 
     enum class PlaceHolderEnum(val value: String) {
         USERNAME("username"),

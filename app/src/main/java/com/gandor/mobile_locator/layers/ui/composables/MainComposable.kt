@@ -8,10 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
+import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
-import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
+import com.gandor.mobile_locator.layers.ui.composables.dialogs.SuccessDialog
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
-import com.gandor.mobile_locator.layers.ui.viewmodels.ErrorDialogViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.DialogViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 
 @Composable
@@ -27,13 +29,21 @@ fun MainComposable(
     Column(
         modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
     ) {
-        val errorDialogState = ErrorDialogViewModel.errorDialogState.collectAsState()
+        val errorDialogState = DialogViewModel.errorDialogState.collectAsState()
+        val successDialogState = DialogViewModel.successDialogState.collectAsState()
+        val panelHostState = PanelHostViewModel.panelHostState.collectAsState()
+
+        PanelEnum.getPanel(panelHostState.value.currentPanel)?.composablePanel?.invoke()
 
         if (errorDialogState.value.openErrorDialog) {
-            ErrorDialog(ErrorDialogViewModel)
+            ErrorDialog(DialogViewModel)
         }
 
-        RegisterPanel(registerViewModel)
-//        CoordinatesPanel(coordinatesViewModel)
+        if (successDialogState.value.openSuccessDialog) {
+            SuccessDialog(DialogViewModel)
+        }
+
+//        RegisterPanel(registerViewModel)
+////        CoordinatesPanel(coordinatesViewModel)
     }
 }
