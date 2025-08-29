@@ -23,12 +23,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
 // TODO: add to privacy policy about location sharing and android id
 @SuppressLint("HardwareIds")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterPanel(
+    settingsViewModel: SettingsViewModel,
     registerViewModel: RegisterViewModel = viewModel (),
 ) {
     val registerState = registerViewModel.registerState.collectAsState()

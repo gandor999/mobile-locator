@@ -15,12 +15,10 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.DialogViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
 @Composable
-fun MainComposable(
-    coordinatesViewModel: CoordinatesViewModel = viewModel(),
-    registerViewModel: RegisterViewModel = viewModel(),
-) {
+fun MainComposable() {
     // add verify token from email for password change on forget or username on forget
     // add forgot password page
     // add register page
@@ -33,8 +31,6 @@ fun MainComposable(
         val successDialogState = DialogViewModel.successDialogState.collectAsState()
         val panelHostState = PanelHostViewModel.panelHostState.collectAsState()
 
-        PanelEnum.getPanel(panelHostState.value.currentPanel)?.composablePanel?.invoke()
-
         if (errorDialogState.value.openErrorDialog) {
             ErrorDialog(DialogViewModel)
         }
@@ -43,7 +39,16 @@ fun MainComposable(
             SuccessDialog(DialogViewModel)
         }
 
-//        RegisterPanel(registerViewModel)
-////        CoordinatesPanel(coordinatesViewModel)
+        val registerViewModel: RegisterViewModel = viewModel()
+        val coordinatesViewModel: CoordinatesViewModel = viewModel()
+        val settingsViewModel: SettingsViewModel = viewModel()
+
+        settingsViewModel.registerListener(coordinatesViewModel)
+
+        PanelEnum.showPanel(panelHostState.value.currentPanel, listOf(
+            registerViewModel,
+            coordinatesViewModel,
+            settingsViewModel
+        ))
     }
 }

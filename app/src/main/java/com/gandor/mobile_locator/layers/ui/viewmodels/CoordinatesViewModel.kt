@@ -8,9 +8,12 @@ import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.event.Event
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
+import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MainCoordinatePanelState
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.MapState
+import com.gandor.mobile_locator.layers.ui.viewmodels.states.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
-class CoordinatesViewModel : BaseViewModel(), MapListener {
+class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
     private val _mainCoordinatePanelState = MutableStateFlow(MainCoordinatePanelState())
     private val _mapState = MutableStateFlow(MapState())
     val mainCoordinatePanelState = _mainCoordinatePanelState.asStateFlow()
@@ -52,17 +55,11 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
             )
     }
 
-    private fun setIsShowCoordinatesClicked(clicked: Boolean) {
-        _mainCoordinatePanelState.value =
-            _mainCoordinatePanelState.value.copy(isShowCoordinatesClicked = clicked)
-    }
-
     @SuppressLint("MissingPermission")
     fun showCoordinates(
         activity: Activity
     ) {
         viewModelScope.launch {
-            setIsShowCoordinatesClicked(true)
             setIsLoading(true)
             val location = LocationManager.getCurrentLocation(activity)
 
@@ -74,6 +71,18 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
             setIsLoading(false)
 
             LocationManager.startLocationUpdates(activity, 1000)
+        }
+    }
+
+    fun disableCoordinates() {
+        viewModelScope.launch {
+            setIsLoading(true)
+            LocationManager.stopLocationUpdates()
+
+            setLatitude(0.00)
+            setLongitude(0.00)
+
+            setIsLoading(false)
         }
     }
 
@@ -120,6 +129,22 @@ class CoordinatesViewModel : BaseViewModel(), MapListener {
         }
 
         mapView.addMapListener(this)
+    }
+
+    override fun consumeEvent(event: Event, context: Context?) {
+        when(event) {
+            is SettingsState -> {
+                if (event.isShowCoordinatesClicked) {
+                    context?.let {
+                        if (context is Activity) {
+                            showCoordinates(context)
+                        }
+                    }
+                } else {
+                    disableCoordinates()
+                }
+            }
+        }
     }
 
     companion object {

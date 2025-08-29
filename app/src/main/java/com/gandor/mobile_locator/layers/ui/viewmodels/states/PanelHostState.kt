@@ -4,4 +4,5 @@ import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 
 data class PanelHostState(
     val currentPanel: PanelEnum = PanelEnum.COORDINATES_PANEL,
+    val panelHistoryStack: MutableList<PanelEnum> = mutableListOf(PanelEnum.COORDINATES_PANEL)
 )

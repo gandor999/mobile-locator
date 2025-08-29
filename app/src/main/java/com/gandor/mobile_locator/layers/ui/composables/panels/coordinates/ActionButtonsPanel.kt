@@ -8,32 +8,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun ActionButtonsPanel(
-    coordinatesViewModel: CoordinatesViewModel
+    coordinatesViewModel: CoordinatesViewModel,
+    settingsViewModel: SettingsViewModel
 ) {
     val activity = LocalContext.current as? Activity
+    val mainCoordinatePanelState = coordinatesViewModel.mainCoordinatePanelState.collectAsState().value
 
     LazyColumn(
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.End,
+        horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxSize()
     ) {
         item {
             Button(
                 onClick = {
-                    if (activity != null) {
-                        coordinatesViewModel.showCoordinates(activity)
-                    }
+                    coordinatesViewModel.switchPanels(PanelEnum.SETTINGS_PANEL)
                 }) {
-                Text(text = ConstantStrings.CoordinatesConstants.SHOW_COORDINATES)
+                Text(text = ConstantStrings.OPEN_SETTINGS)
             }
 
             Button(

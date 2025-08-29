@@ -55,7 +55,7 @@ class RegisterViewModel: BaseViewModel() {
                     DialogViewModel.showSuccessDialog(listOf(ConstantStrings.RegistrationConstants.REGISTER_SUCCESS))
                     // TODO: move to login page
 
-                    PanelHostViewModel.switchPanel(PanelEnum.COORDINATES_PANEL)
+                    switchPanels(PanelEnum.COORDINATES_PANEL)
                 }
 
                 is ApiResult.Fail -> {
