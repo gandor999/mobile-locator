@@ -78,10 +78,6 @@ class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
         viewModelScope.launch {
             setIsLoading(true)
             LocationManager.stopLocationUpdates(context)
-
-            setLatitude(0.00)
-            setLongitude(0.00)
-
             setIsLoading(false)
         }
     }
@@ -148,11 +144,11 @@ class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
     }
 
     companion object {
-        fun initializeOpenStreetMapConfigs(activity: Activity) {
-            val sharedPrefs = activity.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
+        fun initializeOpenStreetMapConfigs(context: Context) {
+            val sharedPrefs = context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
 
             Configuration.getInstance().load(
-                activity,
+                context,
                 sharedPrefs
             )
         }

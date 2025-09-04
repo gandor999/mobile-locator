@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -34,7 +35,6 @@ class MainActivity : ComponentActivity() {
         PermissionManager.requestLocationPermissions()
 
         startLocationService(this)
-        CoordinatesViewModel.initializeOpenStreetMapConfigs(this)
 
         setContent {
             Mobile_locatorTheme {
@@ -53,6 +53,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("GEO TEST", "onResume")
+    }
+
     fun startLocationService(context: Context) {
         if (!LocationService.isRunning && PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
             val serviceIntent = Intent(this, LocationService::class.java)
@@ -62,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        println("GEO TEST | !PermissionManager.isBackgroundLocationGranted(this): ${!PermissionManager.isBackgroundLocationGranted(this)}")
+//        println("GEO TEST | !PermissionManager.isBackgroundLocationGranted(this): ${!PermissionManager.isBackgroundLocationGranted(this)}")
         if (!PermissionManager.isBackgroundLocationGranted(this)) {
             stopService(Intent(this, LocationService::class.java))
             LocationManager.stopLocationUpdates(this)

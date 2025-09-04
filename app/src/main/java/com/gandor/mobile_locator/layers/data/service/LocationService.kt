@@ -56,7 +56,7 @@ class LocationService: Service() {
         serviceScope.launch {
             LocationManager.locationFlow.collect { location ->
                 location?.let {
-                    Log.d("GEO TEST", "onStartCommand | Location update received: ${it.latitude}, ${it.longitude}")
+//                    Log.d("GEO TEST", "onStartCommand | Location update received: ${it.latitude}, ${it.longitude}")
                 }
             }
         }

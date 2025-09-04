@@ -53,7 +53,7 @@ fun OpenStreetMapView(
         LocationManager.locationFlow.collect { location ->
             location?.let {
                 coordinatesViewModel.setCoordinates(it.latitude, it.longitude)
-                Log.d("GEO TEST", "Location update received: ${it.latitude}, ${it.longitude}")
+//                Log.d("GEO TEST", "Location update received: ${it.latitude}, ${it.longitude}")
             }
         }
     }
@@ -61,7 +61,7 @@ fun OpenStreetMapView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clipToBounds() // 👈 This restricts overflow!
+            .clipToBounds()
     ) {
         AndroidView(
             factory = { context ->

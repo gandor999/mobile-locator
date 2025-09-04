@@ -3,6 +3,7 @@ package com.gandor.mobile_locator.layers.ui.composables.panels.settings
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,8 @@ fun SettingsPanel(
     val context = LocalContext.current
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
 
+    settingsViewModel.syncWithPermissionsOnResume(context)
+
     BackArrowButton(
         onBackClick = {
             settingsViewModel.switchBackToRecentPanel()
@@ -61,6 +64,8 @@ fun SettingsPanel(
                 )
             }
 
+            Log.d("GEO TEST", "settingsState.isBackgroundLocationTurnedOn: ${settingsState.isBackgroundLocationTurnedOn}")
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -71,18 +76,7 @@ fun SettingsPanel(
                 Switch(
                     checked = settingsState.isBackgroundLocationTurnedOn,
                     onCheckedChange = { isChecked ->
-                        (context as? Activity)?.let {
-                            if (isChecked) {
-                                PermissionManager.promptBackgroundLocation(it)
-                            } else {
-                                PermissionManager.openAppPermissionSettings(it)
-                            }
-                        }
-
-                        settingsViewModel.setIsBackgroundLocationTurnedOn(
-                            context,
-                            PermissionManager.isBackgroundLocationGranted(context)
-                        )
+                        settingsViewModel.switchBackgroundLocationEmit(context, isChecked)
                     }
                 )
             }

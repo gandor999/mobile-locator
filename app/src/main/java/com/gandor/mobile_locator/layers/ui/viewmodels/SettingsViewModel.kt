@@ -1,8 +1,11 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Notifier
@@ -10,6 +13,7 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.states.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.core.content.edit
+import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 
 class SettingsViewModel: BaseViewModel(), Notifier {
     private val _settingsState = MutableStateFlow(SettingsState())
@@ -89,5 +93,29 @@ class SettingsViewModel: BaseViewModel(), Notifier {
 
         cacheToSharedPreferences(context)
         notifyListeners(context)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun syncWithPermissionsOnResume(context: Context) {
+        val isBackgroundLocationPermissionGranted = PermissionManager.isBackgroundLocationGranted(context)
+
+        setIsBackgroundLocationTurnedOn(
+            context,
+            isBackgroundLocationPermissionGranted
+        )
+
+        if (!isBackgroundLocationPermissionGranted && !PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
+            setIsShowCoordinatesClicked(context, false)
+        }
+    }
+
+    fun switchBackgroundLocationEmit(context: Context, isChecked: Boolean) {
+        (context as? Activity)?.let {
+            if (isChecked) {
+                PermissionManager.promptBackgroundLocation(it)
+            } else {
+                PermissionManager.openAppPermissionSettings(it)
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.gandor.mobile_locator.layers.data.service.LocationService
+import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.LocationManagerState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -47,6 +48,8 @@ object LocationManager {
                 locationFlow.value = result.lastLocation
             }
         }
+
+        CoordinatesViewModel.initializeOpenStreetMapConfigs(context)
     }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
