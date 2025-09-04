@@ -20,7 +20,6 @@ import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.MainComposable
 import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
-import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)

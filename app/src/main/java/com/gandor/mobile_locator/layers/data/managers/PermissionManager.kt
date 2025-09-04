@@ -23,17 +23,21 @@ object PermissionManager: ViewModel() {
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
-    fun registerPermissions(mainActivity: MainActivity) {
-        multiplePermissionLauncher = mainActivity.registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ){}
+    fun registerPermissions(context: Context) {
+        when(context) {
+            is MainActivity -> {
+                multiplePermissionLauncher = context.registerForActivityResult(
+                    ActivityResultContracts.RequestMultiplePermissions()
+                ){}
 
-        // Background location launcher
-        permissionLauncher = mainActivity.registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { granted ->
-            if (!granted) {
-                Toast.makeText(mainActivity, ConstantStrings.BACKGROUND_LOCATION_PERMISSION_DENIED, Toast.LENGTH_SHORT).show()
+                // Background location launcher
+                permissionLauncher = context.registerForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { granted ->
+                    if (!granted) {
+                        Toast.makeText(context, ConstantStrings.BACKGROUND_LOCATION_PERMISSION_DENIED, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
