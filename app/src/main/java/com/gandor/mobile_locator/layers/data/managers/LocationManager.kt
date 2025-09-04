@@ -4,10 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.LocationManagerState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -71,10 +73,15 @@ object LocationManager {
         setIsLocationUpdatesStarted(true)
     }
 
-    fun stopLocationUpdates() {
+    fun stopLocationUpdates(context: Context) {
         if (_locationManagerState.value.isLocationUpdatesStarted) {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setIsLocationUpdatesStarted(false)
+
+            if (LocationService.isRunning) {
+                val intent = Intent(context, LocationService::class.java)
+                context.stopService(intent)
+            }
         }
     }
 

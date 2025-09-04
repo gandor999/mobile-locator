@@ -5,18 +5,21 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.room.Room
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.MainComposable
 import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : ComponentActivity() {
@@ -39,6 +42,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    BackHandler {
+                        PanelHostViewModel.switchBackToRecentPanel()
+                    }
+
                     MainComposable()
                 }
             }
@@ -54,9 +61,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        println("GEO TEST | !PermissionManager.isBackgroundLocationGranted(this): ${!PermissionManager.isBackgroundLocationGranted(this)}")
         if (!PermissionManager.isBackgroundLocationGranted(this)) {
             stopService(Intent(this, LocationService::class.java))
-            LocationManager.stopLocationUpdates()
+            LocationManager.stopLocationUpdates(this)
         }
     }
 }

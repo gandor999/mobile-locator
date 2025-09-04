@@ -1,6 +1,9 @@
 package com.gandor.mobile_locator.layers.ui.composables.panels.settings
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.managers.LocationManager
+import com.gandor.mobile_locator.layers.data.managers.PermissionManager
+import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.panels.buttons.BackArrowButton
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun SettingsPanel(
@@ -44,12 +51,38 @@ fun SettingsPanel(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
-                Text(text = ConstantStrings.CoordinatesConstants.SHOW_COORDINATES)
+                Text(text = ConstantStrings.CoordinatesConstants.EMIT_LOCATION)
 
                 Switch(
                     checked = settingsState.isShowCoordinatesClicked,
                     onCheckedChange = { isChecked ->
                         settingsViewModel.setIsShowCoordinatesClicked(context, isChecked)
+                    }
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ) {
+                Text(text = ConstantStrings.ENABLE_BACKGROUND_LOCATION)
+
+                Switch(
+                    checked = settingsState.isBackgroundLocationTurnedOn,
+                    onCheckedChange = { isChecked ->
+                        (context as? Activity)?.let {
+                            if (isChecked) {
+                                PermissionManager.promptBackgroundLocation(it)
+                            } else {
+                                PermissionManager.openAppPermissionSettings(it)
+                            }
+                        }
+
+                        settingsViewModel.setIsBackgroundLocationTurnedOn(
+                            context,
+                            PermissionManager.isBackgroundLocationGranted(context)
+                        )
                     }
                 )
             }

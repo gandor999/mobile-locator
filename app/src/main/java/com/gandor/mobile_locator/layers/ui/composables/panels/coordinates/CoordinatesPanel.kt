@@ -31,26 +31,23 @@ fun CoordinatesPanel(
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
     val baseSettingsState = settingsViewModel.baseState.collectAsState().value
 
-    Box {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.75f),
+        contentAlignment = Alignment.Center
+    ) {
         PopOutEntryAndExit(!settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
             Text("Not emitting location right now")
         }
 
         SlideDownEntry(settingsState.isShowCoordinatesClicked && coordinatesBaseState.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.75f),
-                contentAlignment = Alignment.Center // 👈 centers both vertically and horizontally
-            ) {
-                CircularProgressIndicator()
-            }
+            CircularProgressIndicator()
         }
 
         PopOutEntryAndExit(settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
             MainCoordinatesPanel(coordinatesViewModel)
         }
-
     }
 
     SlideInEntry {

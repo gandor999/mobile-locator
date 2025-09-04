@@ -74,10 +74,10 @@ class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
         }
     }
 
-    fun disableCoordinates() {
+    fun disableCoordinates(context: Context) {
         viewModelScope.launch {
             setIsLoading(true)
-            LocationManager.stopLocationUpdates()
+            LocationManager.stopLocationUpdates(context)
 
             setLatitude(0.00)
             setLongitude(0.00)
@@ -132,16 +132,16 @@ class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
     }
 
     override fun consumeEvent(event: Event, context: Context?) {
-        when(event) {
-            is SettingsState -> {
-                if (event.isShowCoordinatesClicked) {
-                    context?.let {
+        context?.let {
+            when(event) {
+                is SettingsState -> {
+                    if (event.isShowCoordinatesClicked) {
                         if (context is Activity) {
                             showCoordinates(context)
                         }
+                    } else {
+                        disableCoordinates(context)
                     }
-                } else {
-                    disableCoordinates()
                 }
             }
         }

@@ -33,7 +33,7 @@ object PermissionManager: ViewModel() {
             ActivityResultContracts.RequestPermission()
         ) { granted ->
             if (!granted) {
-                Toast.makeText(mainActivity, "Background location denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mainActivity, ConstantStrings.BACKGROUND_LOCATION_PERMISSION_DENIED, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -51,13 +51,13 @@ object PermissionManager: ViewModel() {
     fun promptBackgroundLocation(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationGranted(activity)) {
             AlertDialog.Builder(activity)
-                .setTitle("Background Location Permission")
-                .setMessage("To track your location continuously, please allow background location access.")
-                .setPositiveButton("Allow") { _, _ ->
+                .setTitle(ConstantStrings.BACKGROUND_LOCATION_PERMISSION)
+                .setMessage(ConstantStrings.BACKGROUND_LOCATION_PERMISSION_MESSAGE)
+                .setPositiveButton(ConstantStrings.ALLOW) { _, _ ->
                     // Request permission
                     permissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 }
-                .setNegativeButton("No") { dialog, _ ->
+                .setNegativeButton(ConstantStrings.NO) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .show()

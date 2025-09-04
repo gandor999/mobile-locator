@@ -33,4 +33,11 @@ class SettingsViewModel: BaseViewModel(), Notifier {
 
         notifyListeners(context)
     }
+
+    fun setIsBackgroundLocationTurnedOn(context: Context, bool: Boolean) {
+        _settingsState.value =
+            _settingsState.value.copy(isBackgroundLocationTurnedOn = bool)
+
+        notifyListeners(context)
+    }
 }

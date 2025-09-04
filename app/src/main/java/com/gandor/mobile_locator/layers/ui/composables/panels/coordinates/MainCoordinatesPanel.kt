@@ -28,8 +28,6 @@ fun MainCoordinatesPanel(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.75f)
 //                .border(2.dp, Color.Red)
     ) {
         Spacer(modifier = Modifier.height(ConstantNumbers.SPACER_HEIGHT.dp))
