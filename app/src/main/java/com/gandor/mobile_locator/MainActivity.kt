@@ -1,5 +1,7 @@
 package com.gandor.mobile_locator
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.room.Room
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.data.service.LocationService
@@ -23,16 +24,16 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
 
-        // TODO: revisit how unhandled exceptions should be handled
-//        Thread.setDefaultUncaughtExceptionHandler(GlobalErrorManager)
         PermissionManager.registerPermissions(this)
         PermissionManager.requestLocationPermissions()
-        startLocationService()
+
+        startLocationService(this)
         CoordinatesViewModel.initializeOpenStreetMapConfigs(this)
 
         setContent {
@@ -52,8 +53,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun startLocationService() {
-        if (!LocationService.isRunning) {
+    fun startLocationService(context: Context) {
+        if (!LocationService.isRunning && PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
             val serviceIntent = Intent(this, LocationService::class.java)
             startForegroundService(serviceIntent)
         }

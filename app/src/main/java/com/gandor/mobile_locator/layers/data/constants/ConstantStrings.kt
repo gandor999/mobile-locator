@@ -34,6 +34,10 @@ object ConstantStrings {
         const val OK: String = "Ok"
     }
 
+    object SharedPreferenceMapName {
+        val SETTINGS = Pair("settings", 0)
+    }
+
     enum class PlaceHolderEnum(val value: String) {
         USERNAME("username"),
         PASSWORD("password"),

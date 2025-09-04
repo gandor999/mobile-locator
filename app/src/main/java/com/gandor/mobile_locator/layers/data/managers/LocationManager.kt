@@ -51,11 +51,11 @@ object LocationManager {
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun startLocationUpdates(context: Context, updateIntervalMillis: Long) {
-        if (!PermissionManager.isAllNeededRequiredPermissionsGranted(context)) {
-//            if (context is Activity && !PermissionManager.isNotAllowedToAskAgain(context)) {
-//                PermissionManager.promptRequiredPermissions(context)
-//            }
+        if (!::fusedLocationClient.isInitialized) {
+            initialize(context)
+        }
 
+        if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
             return
         }
 
@@ -87,7 +87,11 @@ object LocationManager {
 
     @SuppressLint("MissingPermission")
     suspend fun getCurrentLocation(activity: Activity): Location? {
-        if (!PermissionManager.isAllNeededRequiredPermissionsGranted(activity)) {
+        if (!::fusedLocationClient.isInitialized) {
+            initialize(activity)
+        }
+
+        if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(activity)) {
             if (!PermissionManager.isNotAllowedToAskAgain(activity)) {
                 PermissionManager.promptRequiredPermissions(activity)
             }

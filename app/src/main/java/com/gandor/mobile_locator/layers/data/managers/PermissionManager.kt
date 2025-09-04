@@ -78,12 +78,12 @@ object PermissionManager: ViewModel() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun isAllNeededRequiredPermissionsGranted(context: Context): Boolean {
+    fun isFineOrCourseGrainedPermissionGranted(context: Context): Boolean {
         return isCoarseLocationGranted(context) && isFineLocationGranted(context)
     }
 
     fun isNotAllowedToAskAgain(activity: Activity): Boolean {
-        val isAllNeededRequiredPermissionsGranted = isAllNeededRequiredPermissionsGranted(activity)
+        val isAllNeededRequiredPermissionsGranted = isFineOrCourseGrainedPermissionGranted(activity)
         val canAskAgain = ActivityCompat.shouldShowRequestPermissionRationale(
             activity,
             Manifest.permission.ACCESS_COARSE_LOCATION

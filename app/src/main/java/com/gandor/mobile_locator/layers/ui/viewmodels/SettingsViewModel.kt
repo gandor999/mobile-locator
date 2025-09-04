@@ -2,17 +2,65 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
+import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Notifier
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import androidx.core.content.edit
 
 class SettingsViewModel: BaseViewModel(), Notifier {
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState = _settingsState.asStateFlow()
 
     private val listeners: MutableList<Listener> = mutableListOf()
+
+    fun getCurrentMapForKeyNameToStateBooleans(): HashMap<String, Boolean> {
+        // important to get on current state instead of init as private val
+        return hashMapOf(
+            SettingsState.Companion.SHARED_PREFERENCE_KEYS.IS_SHOW_COORDINATES_CLICKED to _settingsState.value.isShowCoordinatesClicked,
+            SettingsState.Companion.SHARED_PREFERENCE_KEYS.IS_BACKGROUND_LOCATION_TURNED_ON to _settingsState.value.isBackgroundLocationTurnedOn
+        )
+    }
+
+    fun cacheToSharedPreferences(context: Context) {
+        val sharedPreferenceMap = ConstantStrings.SharedPreferenceMapName.SETTINGS
+        val sharedPreferences = context.getSharedPreferences(sharedPreferenceMap.first, sharedPreferenceMap.second)
+
+        sharedPreferences.edit {
+            getCurrentMapForKeyNameToStateBooleans().forEach {
+                putBoolean(
+                    it.key,
+                    it.value
+                )
+            }
+
+            apply()
+        }
+    }
+
+    fun syncWithSharedPreference(context: Context) {
+        val sharedPreferenceMap = ConstantStrings.SharedPreferenceMapName.SETTINGS
+        val sharedPreferences = context.getSharedPreferences(sharedPreferenceMap.first, sharedPreferenceMap.second)
+
+        setIsShowCoordinatesClicked(
+            context,
+            sharedPreferences.getBoolean(
+                SettingsState.Companion.SHARED_PREFERENCE_KEYS.IS_SHOW_COORDINATES_CLICKED,
+                _settingsState.value.isShowCoordinatesClicked
+            )
+        )
+
+        setIsBackgroundLocationTurnedOn(
+            context,
+            sharedPreferences.getBoolean(
+                SettingsState.Companion.SHARED_PREFERENCE_KEYS.IS_BACKGROUND_LOCATION_TURNED_ON,
+                _settingsState.value.isBackgroundLocationTurnedOn
+            )
+        )
+    }
 
     override fun registerListener(listener: Listener) {
         listeners.add(listener)
@@ -31,6 +79,7 @@ class SettingsViewModel: BaseViewModel(), Notifier {
         _settingsState.value =
             _settingsState.value.copy(isShowCoordinatesClicked = clicked)
 
+        cacheToSharedPreferences(context)
         notifyListeners(context)
     }
 
@@ -38,6 +87,7 @@ class SettingsViewModel: BaseViewModel(), Notifier {
         _settingsState.value =
             _settingsState.value.copy(isBackgroundLocationTurnedOn = bool)
 
+        cacheToSharedPreferences(context)
         notifyListeners(context)
     }
 }

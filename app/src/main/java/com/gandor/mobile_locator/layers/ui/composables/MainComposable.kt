@@ -52,6 +52,7 @@ fun MainComposable() {
         val settingsViewModel: SettingsViewModel = viewModel()
 
         settingsViewModel.registerListener(coordinatesViewModel)
+        settingsViewModel.syncWithSharedPreference(context)
 
         PanelEnum.showPanel(panelHostState.value.currentPanel, listOf(
             registerViewModel,
