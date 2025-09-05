@@ -2,7 +2,6 @@ package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

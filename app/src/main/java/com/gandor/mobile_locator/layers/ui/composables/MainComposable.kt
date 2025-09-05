@@ -1,13 +1,11 @@
 package com.gandor.mobile_locator.layers.ui.composables
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.room.RoomDatabase
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
@@ -30,11 +27,6 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun MainComposable() {
-    // add verify token from email for password change on forget or username on forget
-    // add forgot password page
-    // add register page
-    // add login page if 
-    // add main menu
     val context = LocalContext.current
 
     Column(

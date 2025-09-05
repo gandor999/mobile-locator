@@ -1,7 +1,6 @@
 package com.gandor.mobile_locator.layers.ui.composables.panels.settings
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -20,9 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
-import com.gandor.mobile_locator.layers.data.managers.LocationManager
-import com.gandor.mobile_locator.layers.data.managers.PermissionManager
-import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.composables.panels.buttons.BackArrowButton
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 

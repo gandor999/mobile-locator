@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
-import com.gandor.mobile_locator.layers.ui.composables.PopOutEntryAndExit
 import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
 import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
 import com.gandor.mobile_locator.layers.ui.composables.panels.settings.SettingsPanel

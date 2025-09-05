@@ -3,17 +3,16 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.content.edit
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Notifier
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import androidx.core.content.edit
-import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 
 class SettingsViewModel: BaseViewModel(), Notifier {
     private val _settingsState = MutableStateFlow(SettingsState())
