@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
@@ -26,6 +28,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
     private val _mainCoordinatePanelState = MutableStateFlow(MainCoordinatePanelState())
     private val _mapState = MutableStateFlow(MapState())
@@ -54,6 +57,7 @@ class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
                 longitude = lon
             )
     }
+
 
     @SuppressLint("MissingPermission")
     fun showCoordinates(

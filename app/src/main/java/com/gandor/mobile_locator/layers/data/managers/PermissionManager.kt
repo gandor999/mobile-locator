@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,10 +19,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import java.io.File
+import java.io.FileWriter
 
+@RequiresApi(Build.VERSION_CODES.Q)
 object PermissionManager: ViewModel() {
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private var fineGrainedPermissionDialog: AlertDialog? = null
 
     fun registerPermissions(context: Context) {
         when(context) {
@@ -52,9 +57,9 @@ object PermissionManager: ViewModel() {
         )
     }
 
-    fun promptBackgroundLocation(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationGranted(activity)) {
-            AlertDialog.Builder(activity)
+    fun promptBackgroundLocation(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationGranted(context)) {
+            AlertDialog.Builder(context)
                 .setTitle(ConstantStrings.BACKGROUND_LOCATION_PERMISSION)
                 .setMessage(ConstantStrings.BACKGROUND_LOCATION_PERMISSION_MESSAGE)
                 .setPositiveButton(ConstantStrings.ALLOW) { _, _ ->
@@ -86,47 +91,51 @@ object PermissionManager: ViewModel() {
         return isCoarseLocationGranted(context) && isFineLocationGranted(context)
     }
 
-    fun isNotAllowedToAskAgain(activity: Activity): Boolean {
-        val isAllNeededRequiredPermissionsGranted = isFineOrCourseGrainedPermissionGranted(activity)
-        val canAskAgain = ActivityCompat.shouldShowRequestPermissionRationale(
-            activity,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) && ActivityCompat.shouldShowRequestPermissionRationale(
-            activity,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) && ActivityCompat.shouldShowRequestPermissionRationale(
-            activity,
-            Manifest.permission.INTERNET
-        )
-        return isAllNeededRequiredPermissionsGranted && canAskAgain
+    fun isNotAllowedToAskAgain(context: Context): Boolean {
+        val isAllNeededRequiredPermissionsGranted = isFineOrCourseGrainedPermissionGranted(context)
+        val canAskAgain = (context as? Activity)?.let {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                it,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) && ActivityCompat.shouldShowRequestPermissionRationale(
+                it,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) && ActivityCompat.shouldShowRequestPermissionRationale(
+                it,
+                Manifest.permission.INTERNET
+            )
+        }
+        return isAllNeededRequiredPermissionsGranted && canAskAgain == true
     }
 
-    fun promptRequiredPermissions(activity: Activity) {
-        AlertDialog.Builder(activity)
-            .setTitle(ConstantStrings.PERMISSION_REQUIRED)
-            .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
-            .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
-                openAppPermissionSettings(activity)
+    fun promptRequiredPermissions(context: Context) {
+        if (!isFineOrCourseGrainedPermissionGranted(context)) {
+            if (fineGrainedPermissionDialog != null && fineGrainedPermissionDialog?.isShowing == true) {
+                return
             }
-            .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
-            }
-            .show()
+
+            fineGrainedPermissionDialog = AlertDialog.Builder(context)
+                .setTitle(ConstantStrings.PERMISSION_REQUIRED)
+                .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
+                .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
+                    openAppPermissionSettings(context)
+                    fineGrainedPermissionDialog = null
+                }
+                .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
+                    fineGrainedPermissionDialog = null
+                }
+                .setOnDismissListener {
+                    fineGrainedPermissionDialog = null
+                }
+                .show()
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun isBackgroundLocationGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_BACKGROUND_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestBackgroundLocationPermission(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (!isBackgroundLocationGranted(activity)) {
-                promptBackgroundLocation(activity)
-            }
-        }
     }
 
     fun openAppPermissionSettings(context: Context) {

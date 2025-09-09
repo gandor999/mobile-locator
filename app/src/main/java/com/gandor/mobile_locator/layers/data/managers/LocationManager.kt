@@ -6,8 +6,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import com.gandor.mobile_locator.layers.data.service.LocationService
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
@@ -25,6 +27,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+@RequiresApi(Build.VERSION_CODES.Q)
 object LocationManager {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -87,6 +90,7 @@ object LocationManager {
             }
         }
     }
+
 
     @SuppressLint("MissingPermission")
     suspend fun getCurrentLocation(activity: Activity): Location? {

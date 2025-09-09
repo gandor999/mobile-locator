@@ -60,8 +60,6 @@ fun SettingsPanel(
                 )
             }
 
-            Log.d("GEO TEST", "settingsState.isBackgroundLocationTurnedOn: ${settingsState.isBackgroundLocationTurnedOn}")
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,

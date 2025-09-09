@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
+import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
@@ -14,6 +15,7 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.states.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class SettingsViewModel: BaseViewModel(), Notifier {
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState = _settingsState.asStateFlow()
@@ -94,18 +96,38 @@ class SettingsViewModel: BaseViewModel(), Notifier {
         notifyListeners(context)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun syncWithPermissionsOnResume(context: Context) {
+//        when(context) {
+//            is MainActivity -> {
+//                context.resultLauncher = context.registerForActivityResult(
+//                    ActivityResultContracts.StartActivityForResult()
+//                ) {
+//                    // This always means: user came back from Settings
+//                    checkPermissions()
+//                }
+//            }
+//        }
+
         val isBackgroundLocationPermissionGranted = PermissionManager.isBackgroundLocationGranted(context)
+        val isFineCourseGrainedLocationPermissionGranted = PermissionManager.isFineOrCourseGrainedPermissionGranted(context)
 
-        setIsBackgroundLocationTurnedOn(
-            context,
-            isBackgroundLocationPermissionGranted
-        )
-
-        if (!isBackgroundLocationPermissionGranted && !PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
-            setIsShowCoordinatesClicked(context, false)
+        if (isBackgroundLocationPermissionGranted != _settingsState.value.isBackgroundLocationTurnedOn) {
+            setIsBackgroundLocationTurnedOn(
+                context,
+                isBackgroundLocationPermissionGranted
+            )
         }
+
+        if (isFineCourseGrainedLocationPermissionGranted != _settingsState.value.isShowCoordinatesClicked) {
+            setIsShowCoordinatesClicked(
+                context,
+                isFineCourseGrainedLocationPermissionGranted
+            )
+        }
+//
+//        if (!isBackgroundLocationPermissionGranted && !PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
+//            setIsShowCoordinatesClicked(context, false)
+//        }
     }
 
     fun switchBackgroundLocationEmit(context: Context, isChecked: Boolean) {
