@@ -29,16 +29,38 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 @Composable
 fun MainComposable() {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val registerViewModel: RegisterViewModel = viewModel()
+    val coordinatesViewModel: CoordinatesViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = viewModel()
+
+    val errorDialogState = DialogViewModel.errorDialogState.collectAsState()
+    val successDialogState = DialogViewModel.successDialogState.collectAsState()
+    val panelHostState = PanelHostViewModel.panelHostState.collectAsState()
+
+    settingsViewModel.registerListener(coordinatesViewModel)
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                settingsViewModel.syncWithSharedPreference(context)
+                settingsViewModel.syncPermissions(context)
+
+                when(context) {
+                    is MainActivity -> {
+                        context.mainActivityConfigurator.startLocationService(context)
+                    }
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Column(
         modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
     ) {
-        val errorDialogState = DialogViewModel.errorDialogState.collectAsState()
-        val successDialogState = DialogViewModel.successDialogState.collectAsState()
-        val panelHostState = PanelHostViewModel.panelHostState.collectAsState()
-
-        val lifecycleOwner = LocalLifecycleOwner.current
-
         if (errorDialogState.value.openErrorDialog) {
             ErrorDialog(DialogViewModel)
         }
@@ -47,33 +69,13 @@ fun MainComposable() {
             SuccessDialog(DialogViewModel)
         }
 
-        val registerViewModel: RegisterViewModel = viewModel()
-        val coordinatesViewModel: CoordinatesViewModel = viewModel()
-        val settingsViewModel: SettingsViewModel = viewModel()
-
-        settingsViewModel.registerListener(coordinatesViewModel)
-
-        DisposableEffect(lifecycleOwner) {
-            val observer = LifecycleEventObserver { _, event ->
-                if (event == Lifecycle.Event.ON_RESUME) {
-                    settingsViewModel.syncWithSharedPreference(context)
-                    settingsViewModel.syncPermissions(context)
-
-                    when(context) {
-                        is MainActivity -> {
-                            context.mainActivityConfigurator.startLocationService(context)
-                        }
-                    }
-                }
-            }
-            lifecycleOwner.lifecycle.addObserver(observer)
-            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-        }
-
-        PanelEnum.showPanel(panelHostState.value.currentPanel, listOf(
-            registerViewModel,
-            coordinatesViewModel,
-            settingsViewModel
-        ))
+        PanelEnum.showPanel(
+            panelHostState.value.currentPanel,
+            listOf(
+                registerViewModel,
+                coordinatesViewModel,
+                settingsViewModel
+            )
+        )
     }
 }
