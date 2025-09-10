@@ -121,16 +121,6 @@ class SettingsViewModel() : BaseViewModel(), Notifier {
         }
     }
 
-    fun switchForegroundLocationEmit(context: Context, isChecked: Boolean) {
-        (context as? Activity)?.let {
-            if (isChecked) {
-                PermissionManager.promptRequiredPermissions(it)
-            } else {
-                PermissionManager.openAppPermissionSettings(it)
-            }
-        }
-    }
-
     fun switchBackgroundLocationEmit(context: Context, isChecked: Boolean) {
         (context as? Activity)?.let {
             if (isChecked) {

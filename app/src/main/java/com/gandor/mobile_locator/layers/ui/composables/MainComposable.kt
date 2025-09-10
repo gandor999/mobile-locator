@@ -73,16 +73,7 @@ fun MainComposable() {
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-//        settingsViewModel.syncPermissions(context)
         settingsViewModel.syncWithSharedPreference(context)
-
-//        when(context) {
-//            is MainActivity -> {
-//                if (settingsState.isShowCoordinatesClicked) {
-//                    context.mainActivityConfigurator.startLocationService(context)
-//                }
-//            }
-//        }
     }
 
     setNavHostControllersToBaseViewModels(

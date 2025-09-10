@@ -21,10 +21,6 @@ class MainUi(private val mainActivity: MainActivity): Ui {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    BackHandler {
-//                        PanelHostViewModel.switchBackToRecentPanel()
-//                    }
-
                     MainComposable()
                 }
             }
