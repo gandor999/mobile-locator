@@ -5,14 +5,12 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
@@ -29,7 +27,6 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 @Composable
 fun MainComposable() {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
 
     val registerViewModel: RegisterViewModel = viewModel()
     val coordinatesViewModel: CoordinatesViewModel = viewModel()
@@ -41,21 +38,15 @@ fun MainComposable() {
 
     settingsViewModel.registerListener(coordinatesViewModel)
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                settingsViewModel.syncWithSharedPreference(context)
-                settingsViewModel.syncPermissions(context)
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        settingsViewModel.syncWithSharedPreference(context)
+        settingsViewModel.syncPermissions(context)
 
-                when(context) {
-                    is MainActivity -> {
-                        context.mainActivityConfigurator.startLocationService(context)
-                    }
-                }
+        when(context) {
+            is MainActivity -> {
+                context.mainActivityConfigurator.startLocationService(context)
             }
         }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     Column(
