@@ -5,6 +5,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,26 +32,28 @@ fun CoordinatesPanel(
     val coordinatesBaseState = coordinatesViewModel.baseState.collectAsState().value
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.75f),
-        contentAlignment = Alignment.Center
-    ) {
-        PopOutEntryAndExit(!settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
-            Text("Not emitting location right now")
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.75f),
+            contentAlignment = Alignment.Center
+        ) {
+            PopOutEntryAndExit(!settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
+                Text("Not emitting location right now")
+            }
+
+            SlideDownEntry(settingsState.isShowCoordinatesClicked && coordinatesBaseState.isLoading) {
+                CircularProgressIndicator()
+            }
+
+            PopOutEntryAndExit(settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
+                MainCoordinatesPanel(coordinatesViewModel)
+            }
         }
 
-        SlideDownEntry(settingsState.isShowCoordinatesClicked && coordinatesBaseState.isLoading) {
-            CircularProgressIndicator()
+        SlideInEntry {
+            ActionButtonsPanel(coordinatesViewModel)
         }
-
-        PopOutEntryAndExit(settingsState.isShowCoordinatesClicked && !coordinatesBaseState.isLoading) {
-            MainCoordinatesPanel(coordinatesViewModel)
-        }
-    }
-
-    SlideInEntry {
-        ActionButtonsPanel(coordinatesViewModel)
     }
 }

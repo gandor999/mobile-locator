@@ -18,7 +18,9 @@ open class BaseViewModel(): ViewModel(), ErrorThrower {
     private lateinit var navHostController: NavHostController
 
     fun setNavHostController(navHostController: NavHostController) {
-        this.navHostController = navHostController
+        if (!::navHostController.isInitialized) {
+            this.navHostController = navHostController
+        }
     }
 
     open suspend fun setIsLoading(isLoading: Boolean, minDuration: Long = 2000) {
