@@ -2,7 +2,6 @@ package com.gandor.mobile_locator.layers.ui.composables.panels.settings
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.ui.composables.panels.buttons.BackArrowButton
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
@@ -30,8 +30,6 @@ fun SettingsPanel(
 ) {
     val context = LocalContext.current
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
-
-    settingsViewModel.syncWithPermissionsOnResume(context)
 
     BackArrowButton(
         onBackClick = {
@@ -55,6 +53,11 @@ fun SettingsPanel(
                 Switch(
                     checked = settingsState.isShowCoordinatesClicked,
                     onCheckedChange = { isChecked ->
+                        if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
+                            PermissionManager.promptRequiredPermissions(context)
+                            return@Switch
+                        }
+
                         settingsViewModel.setIsShowCoordinatesClicked(context, isChecked)
                     }
                 )

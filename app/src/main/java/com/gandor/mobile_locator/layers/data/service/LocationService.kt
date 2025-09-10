@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class LocationService: Service() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -35,7 +36,6 @@ class LocationService: Service() {
         val notification = NotificationCompat.Builder(this, "location_channel")
             .setContentTitle("Location Tracking")
             .setContentText("Tracking your location in the background")
-//            .setSmallIcon(R.drawable.ic_location)
             .setOngoing(true)
             .build()
 
@@ -47,9 +47,9 @@ class LocationService: Service() {
         isRunning = true
     }
 
+
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        LocationManager.startLocationUpdates(applicationContext, 1000L)
         val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
         serviceScope.launch {

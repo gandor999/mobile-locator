@@ -23,7 +23,7 @@ class MainActivityConfigurator(private val mainActivity: MainActivity): Configur
         startLocationService(mainActivity)
     }
 
-    private fun startLocationService(mainActivity: MainActivity) {
+    fun startLocationService(mainActivity: MainActivity) {
         if (!LocationService.isRunning && PermissionManager.isFineOrCourseGrainedPermissionGranted(mainActivity)) {
             val serviceIntent = Intent(mainActivity, LocationService::class.java)
             mainActivity.startForegroundService(serviceIntent)

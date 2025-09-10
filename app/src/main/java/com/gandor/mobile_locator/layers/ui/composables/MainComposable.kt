@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.data.constants.PanelEnum
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
@@ -53,12 +54,16 @@ fun MainComposable() {
         settingsViewModel.registerListener(coordinatesViewModel)
 
         DisposableEffect(lifecycleOwner) {
-//            Log.d("GEO TEST", "DisposableEffect")
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME) {
-//                    Log.d("GEO TEST", "DisposableEffect | Lifecycle.Event.ON_RESUME")
                     settingsViewModel.syncWithSharedPreference(context)
-                    settingsViewModel.syncWithPermissionsOnResume(context)
+                    settingsViewModel.syncPermissions(context)
+
+                    when(context) {
+                        is MainActivity -> {
+                            context.mainActivityConfigurator.startLocationService(context)
+                        }
+                    }
                 }
             }
             lifecycleOwner.lifecycle.addObserver(observer)

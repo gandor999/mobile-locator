@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
-import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.Listener
@@ -96,18 +95,7 @@ class SettingsViewModel: BaseViewModel(), Notifier {
         notifyListeners(context)
     }
 
-    fun syncWithPermissionsOnResume(context: Context) {
-//        when(context) {
-//            is MainActivity -> {
-//                context.resultLauncher = context.registerForActivityResult(
-//                    ActivityResultContracts.StartActivityForResult()
-//                ) {
-//                    // This always means: user came back from Settings
-//                    checkPermissions()
-//                }
-//            }
-//        }
-
+    fun syncPermissions(context: Context) {
         val isBackgroundLocationPermissionGranted = PermissionManager.isBackgroundLocationGranted(context)
         val isFineCourseGrainedLocationPermissionGranted = PermissionManager.isFineOrCourseGrainedPermissionGranted(context)
 
@@ -124,10 +112,6 @@ class SettingsViewModel: BaseViewModel(), Notifier {
                 isFineCourseGrainedLocationPermissionGranted
             )
         }
-//
-//        if (!isBackgroundLocationPermissionGranted && !PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
-//            setIsShowCoordinatesClicked(context, false)
-//        }
     }
 
     fun switchBackgroundLocationEmit(context: Context, isChecked: Boolean) {

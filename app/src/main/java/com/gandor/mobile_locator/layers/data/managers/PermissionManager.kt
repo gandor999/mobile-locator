@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,8 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
-import java.io.File
-import java.io.FileWriter
 
 @RequiresApi(Build.VERSION_CODES.Q)
 object PermissionManager: ViewModel() {
