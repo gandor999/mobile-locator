@@ -113,12 +113,12 @@ class SettingsViewModel() : BaseViewModel(), Notifier {
             )
         }
 
-//        if (isFineCourseGrainedLocationPermissionGranted != _settingsState.value.isShowCoordinatesClicked) {
-//            setIsShowCoordinatesClicked(
-//                context,
-//                isFineCourseGrainedLocationPermissionGranted
-//            )
-//        }
+        if (!isFineCourseGrainedLocationPermissionGranted && _settingsState.value.isShowCoordinatesClicked) {
+            setIsShowCoordinatesClicked(
+                context,
+                false
+            )
+        }
     }
 
     fun switchForegroundLocationEmit(context: Context, isChecked: Boolean) {
