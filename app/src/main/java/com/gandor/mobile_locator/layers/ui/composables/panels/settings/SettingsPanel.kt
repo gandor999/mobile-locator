@@ -55,8 +55,6 @@ fun SettingsPanel(
                     Switch(
                         checked = settingsState.isShowCoordinatesClicked,
                         onCheckedChange = { isChecked ->
-//                            settingsViewModel.switchForegroundLocationEmit(context, isChecked)
-
                             if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
                                 PermissionManager.promptRequiredPermissions(context)
                                 return@Switch
