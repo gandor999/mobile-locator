@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,13 +32,12 @@ import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 @Composable
 fun RegisterPanel(
     settingsViewModel: SettingsViewModel,
-    registerViewModel: RegisterViewModel = viewModel (),
+    registerViewModel: RegisterViewModel,
 ) {
     val registerState = registerViewModel.registerState.collectAsState()
     val baseRegisterState = registerViewModel.baseState.collectAsState()
 
     val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize(),

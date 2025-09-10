@@ -2,6 +2,8 @@ package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,18 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
-import com.gandor.mobile_locator.layers.ui.PanelEnum
+import com.gandor.mobile_locator.layers.ui.composables.SettingsPage
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun ActionButtonsPanel(
-    coordinatesViewModel: CoordinatesViewModel,
-    settingsViewModel: SettingsViewModel
+    coordinatesViewModel: CoordinatesViewModel
 ) {
     val activity = LocalContext.current as? Activity
-    val mainCoordinatePanelState = coordinatesViewModel.mainCoordinatePanelState.collectAsState().value
 
     LazyColumn(
         verticalArrangement = Arrangement.Bottom,
@@ -34,7 +35,7 @@ fun ActionButtonsPanel(
         item {
             Button(
                 onClick = {
-                    coordinatesViewModel.switchPanels(PanelEnum.SETTINGS_PANEL)
+                    coordinatesViewModel.switchPanels(SettingsPage)
                 }) {
                 Text(text = ConstantStrings.OPEN_SETTINGS)
             }

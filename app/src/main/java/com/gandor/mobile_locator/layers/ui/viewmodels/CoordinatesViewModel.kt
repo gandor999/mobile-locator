@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.event.Event
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
@@ -29,7 +30,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class CoordinatesViewModel : BaseViewModel(), MapListener, Listener {
+class CoordinatesViewModel() : BaseViewModel(), MapListener, Listener {
     private val _mainCoordinatePanelState = MutableStateFlow(MainCoordinatePanelState())
     private val _mapState = MutableStateFlow(MapState())
     val mainCoordinatePanelState = _mainCoordinatePanelState.asStateFlow()

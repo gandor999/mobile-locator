@@ -6,14 +6,17 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.gandor.mobile_locator.layers.data.managers.LocationManager
+import com.gandor.mobile_locator.layers.data.managers.PermissionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.security.Permission
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class LocationService: Service() {
@@ -40,11 +43,13 @@ class LocationService: Service() {
             .build()
 
         // This makes the service foreground (persistent)
-        startForeground(1, notification)
+        if (PermissionManager.isFineOrCourseGrainedPermissionGranted(applicationContext)) {
+            startForeground(1, notification)
 
-        LocationManager.initialize(applicationContext)
+            LocationManager.initialize(applicationContext)
 
-        isRunning = true
+            isRunning = true
+        }
     }
 
 
@@ -55,7 +60,7 @@ class LocationService: Service() {
         serviceScope.launch {
             LocationManager.locationFlow.collect { location ->
                 location?.let {
-//                    Log.d("GEO TEST", "onStartCommand | Location update received: ${it.latitude}, ${it.longitude}")
+                    Log.d("GEO TEST", "onStartCommand | Location update received: ${it.latitude}, ${it.longitude}")
                 }
             }
         }

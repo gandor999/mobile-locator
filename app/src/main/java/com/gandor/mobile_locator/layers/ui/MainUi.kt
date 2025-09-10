@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.ui.composables.MainComposable
 import com.gandor.mobile_locator.layers.ui.theme.Mobile_locatorTheme
-import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainUi(private val mainActivity: MainActivity): Ui {
@@ -22,9 +21,9 @@ class MainUi(private val mainActivity: MainActivity): Ui {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BackHandler {
-                        PanelHostViewModel.switchBackToRecentPanel()
-                    }
+//                    BackHandler {
+//                        PanelHostViewModel.switchBackToRecentPanel()
+//                    }
 
                     MainComposable()
                 }

@@ -2,18 +2,24 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gandor.mobile_locator.layers.ui.PanelEnum
+import androidx.navigation.NavHostController
 import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableException
+import com.gandor.mobile_locator.layers.ui.composables.Page
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.ErrorThrower
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.BaseState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-open class BaseViewModel: ViewModel(), ErrorThrower {
+open class BaseViewModel(): ViewModel(), ErrorThrower {
     private val _baseState = MutableStateFlow(BaseState())
     val baseState = _baseState.asStateFlow()
     private var loadingStartTime: Long = 0L
+    private lateinit var navHostController: NavHostController
+
+    fun setNavHostController(navHostController: NavHostController) {
+        this.navHostController = navHostController
+    }
 
     open suspend fun setIsLoading(isLoading: Boolean, minDuration: Long = 2000) {
         if (isLoading) {
@@ -32,15 +38,22 @@ open class BaseViewModel: ViewModel(), ErrorThrower {
         }
     }
 
-    fun switchPanels(panel: PanelEnum) {
+    fun switchPanels(page: Page) {
         viewModelScope.launch {
-            PanelHostViewModel.switchPanel(panel)
+            if (::navHostController.isInitialized) {
+                navHostController.navigate(page)
+            }
+
+//            PanelHostViewModel.switchPanel(goToFunction)
         }
     }
 
     fun switchBackToRecentPanel() {
         viewModelScope.launch {
-            PanelHostViewModel.switchBackToRecentPanel()
+            if (::navHostController.isInitialized) {
+                navHostController.popBackStack()
+            }
+//            PanelHostViewModel.switchBackToRecentPanel()
         }
     }
 

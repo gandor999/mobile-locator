@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class SettingsViewModel: BaseViewModel(), Notifier {
+class SettingsViewModel() : BaseViewModel(), Notifier {
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState = _settingsState.asStateFlow()
 
@@ -48,6 +48,13 @@ class SettingsViewModel: BaseViewModel(), Notifier {
     fun syncWithSharedPreference(context: Context) {
         val sharedPreferenceMap = ConstantStrings.SharedPreferenceMapName.SETTINGS
         val sharedPreferences = context.getSharedPreferences(sharedPreferenceMap.first, sharedPreferenceMap.second)
+
+        val isShowCoordinatesClicked = sharedPreferences.getBoolean(
+            SettingsState.Companion.SHARED_PREFERENCE_KEYS.IS_SHOW_COORDINATES_CLICKED,
+            _settingsState.value.isShowCoordinatesClicked
+        )
+
+        println("GEO TEST | syncWithSharedPreference | isShowCoordinatesClicked: $isShowCoordinatesClicked")
 
         setIsShowCoordinatesClicked(
             context,
@@ -106,18 +113,28 @@ class SettingsViewModel: BaseViewModel(), Notifier {
             )
         }
 
-        if (isFineCourseGrainedLocationPermissionGranted != _settingsState.value.isShowCoordinatesClicked) {
-            setIsShowCoordinatesClicked(
-                context,
-                isFineCourseGrainedLocationPermissionGranted
-            )
+//        if (isFineCourseGrainedLocationPermissionGranted != _settingsState.value.isShowCoordinatesClicked) {
+//            setIsShowCoordinatesClicked(
+//                context,
+//                isFineCourseGrainedLocationPermissionGranted
+//            )
+//        }
+    }
+
+    fun switchForegroundLocationEmit(context: Context, isChecked: Boolean) {
+        (context as? Activity)?.let {
+            if (isChecked) {
+                PermissionManager.promptRequiredPermissions(it)
+            } else {
+                PermissionManager.openAppPermissionSettings(it)
+            }
         }
     }
 
     fun switchBackgroundLocationEmit(context: Context, isChecked: Boolean) {
         (context as? Activity)?.let {
             if (isChecked) {
-                PermissionManager.promptBackgroundLocation(it)
+                PermissionManager.promptBackgroundLocationPermission(it)
             } else {
                 PermissionManager.openAppPermissionSettings(it)
             }

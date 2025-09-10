@@ -2,6 +2,8 @@ package com.gandor.mobile_locator.layers.ui.composables.panels.coordinates
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,17 +21,15 @@ import com.gandor.mobile_locator.layers.ui.composables.SlideInEntry
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun CoordinatesPanel(
     settingsViewModel: SettingsViewModel,
-    coordinatesViewModel: CoordinatesViewModel = viewModel()
+    coordinatesViewModel: CoordinatesViewModel
 ) {
-    val activity = LocalContext.current as? Activity
-    val mainCoordinatePanelState = coordinatesViewModel.mainCoordinatePanelState.collectAsState().value
     val coordinatesBaseState = coordinatesViewModel.baseState.collectAsState().value
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
-    val baseSettingsState = settingsViewModel.baseState.collectAsState().value
 
     Box(
         modifier = Modifier
@@ -51,6 +51,6 @@ fun CoordinatesPanel(
     }
 
     SlideInEntry {
-        ActionButtonsPanel(coordinatesViewModel, settingsViewModel)
+        ActionButtonsPanel(coordinatesViewModel)
     }
 }

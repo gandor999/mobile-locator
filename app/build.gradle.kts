@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose")
+    kotlin("plugin.serialization")
 //    alias(libs.plugins.compose.compiler)
 }
 
@@ -62,7 +63,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation.compose)
     val room_version = "2.7.2"
+    val nav_version = "2.9.3"
+
+    implementation("androidx.navigation:navigation-compose:${nav_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")

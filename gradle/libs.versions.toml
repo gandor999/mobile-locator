@@ -1,5 +1,8 @@
 [versions]
 kotlin = "2.0.0"
+navigationCompose = "2.9.3"
+[libraries]
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

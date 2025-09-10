@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,51 +32,55 @@ fun SettingsPanel(
     val context = LocalContext.current
     val settingsState  = settingsViewModel.settingsState.collectAsState().value
 
-    BackArrowButton(
-        onBackClick = {
-            settingsViewModel.switchBackToRecentPanel()
-        }
-    )
-
-    LazyColumn(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
-            ) {
-                Text(text = ConstantStrings.CoordinatesConstants.EMIT_LOCATION)
-
-                Switch(
-                    checked = settingsState.isShowCoordinatesClicked,
-                    onCheckedChange = { isChecked ->
-                        if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
-                            PermissionManager.promptRequiredPermissions(context)
-                            return@Switch
-                        }
-
-                        settingsViewModel.setIsShowCoordinatesClicked(context, isChecked)
-                    }
-                )
+    Column {
+        BackArrowButton(
+            onBackClick = {
+                settingsViewModel.switchBackToRecentPanel()
             }
+        )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
-            ) {
-                Text(text = ConstantStrings.ENABLE_BACKGROUND_LOCATION)
+        LazyColumn(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    Text(text = ConstantStrings.CoordinatesConstants.EMIT_LOCATION)
 
-                Switch(
-                    checked = settingsState.isBackgroundLocationTurnedOn,
-                    onCheckedChange = { isChecked ->
-                        settingsViewModel.switchBackgroundLocationEmit(context, isChecked)
-                    }
-                )
+                    Switch(
+                        checked = settingsState.isShowCoordinatesClicked,
+                        onCheckedChange = { isChecked ->
+//                            settingsViewModel.switchForegroundLocationEmit(context, isChecked)
+
+                            if (!PermissionManager.isFineOrCourseGrainedPermissionGranted(context)) {
+                                PermissionManager.promptRequiredPermissions(context)
+                                return@Switch
+                            }
+
+                            settingsViewModel.setIsShowCoordinatesClicked(context, isChecked)
+                        }
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    Text(text = ConstantStrings.ALWAYS_EMIT_LOCATION)
+
+                    Switch(
+                        checked = settingsState.isBackgroundLocationTurnedOn,
+                        onCheckedChange = { isChecked ->
+                            settingsViewModel.switchBackgroundLocationEmit(context, isChecked)
+                        }
+                    )
+                }
             }
         }
     }

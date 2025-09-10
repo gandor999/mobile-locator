@@ -12,21 +12,41 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
-import com.gandor.mobile_locator.layers.ui.PanelEnum
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.SuccessDialog
+import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
+import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
+import com.gandor.mobile_locator.layers.ui.composables.panels.settings.SettingsPanel
+import com.gandor.mobile_locator.layers.ui.viewmodels.BaseViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.DialogViewModel
-import com.gandor.mobile_locator.layers.ui.viewmodels.PanelHostViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed interface Page
+
+@Serializable
+object RegisterPage: Page
+
+@Serializable
+object CoordinatesPage: Page
+
+@Serializable
+object SettingsPage: Page
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun MainComposable() {
     val context = LocalContext.current
+    val navController = rememberNavController()
 
     val registerViewModel: RegisterViewModel = viewModel()
     val coordinatesViewModel: CoordinatesViewModel = viewModel()
@@ -34,20 +54,41 @@ fun MainComposable() {
 
     val errorDialogState = DialogViewModel.errorDialogState.collectAsState()
     val successDialogState = DialogViewModel.successDialogState.collectAsState()
-    val panelHostState = PanelHostViewModel.panelHostState.collectAsState()
 
     settingsViewModel.registerListener(coordinatesViewModel)
 
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
+
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        settingsViewModel.syncWithSharedPreference(context)
         settingsViewModel.syncPermissions(context)
+        settingsViewModel.syncWithSharedPreference(context)
 
         when(context) {
             is MainActivity -> {
-                context.mainActivityConfigurator.startLocationService(context)
+                if (settingsState.isShowCoordinatesClicked) {
+                    context.mainActivityConfigurator.startLocationService(context)
+                }
             }
         }
     }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+//        settingsViewModel.syncPermissions(context)
+        settingsViewModel.syncWithSharedPreference(context)
+
+//        when(context) {
+//            is MainActivity -> {
+//                if (settingsState.isShowCoordinatesClicked) {
+//                    context.mainActivityConfigurator.startLocationService(context)
+//                }
+//            }
+//        }
+    }
+
+    setNavHostControllersToBaseViewModels(
+        listOf(registerViewModel, coordinatesViewModel, settingsViewModel),
+        navController
+    )
 
     Column(
         modifier = Modifier.padding(ConstantNumbers.MAIN_PADDING.dp),
@@ -60,13 +101,19 @@ fun MainComposable() {
             SuccessDialog(DialogViewModel)
         }
 
-        PanelEnum.showPanel(
-            panelHostState.value.currentPanel,
-            listOf(
-                registerViewModel,
-                coordinatesViewModel,
-                settingsViewModel
-            )
-        )
+        NavHost(
+            navController = navController,
+            startDestination = CoordinatesPage,
+        ) {
+            composable<RegisterPage> { RegisterPanel(settingsViewModel, registerViewModel) }
+            composable<CoordinatesPage> { CoordinatesPanel(settingsViewModel, coordinatesViewModel) }
+            composable<SettingsPage> { SettingsPanel(settingsViewModel) }
+        }
+    }
+}
+
+fun setNavHostControllersToBaseViewModels(baseViewModels: List<BaseViewModel>, navHostController: NavHostController) {
+    baseViewModels.forEach {
+        it.setNavHostController(navHostController)
     }
 }

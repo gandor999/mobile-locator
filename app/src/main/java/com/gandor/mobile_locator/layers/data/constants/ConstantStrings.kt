@@ -11,10 +11,13 @@ object ConstantStrings {
     const val NO: String = "No"
     const val GOOGLE_OPEN_LOCATION_URI: String = "https://www.google.com/maps/search/?api=1&query="
     const val NETWORK_FAIL_NO_MESSAGE = "NetworkFail has no error message please raise issue with developer"
-    const val ENABLE_BACKGROUND_LOCATION = "Background location streaming"
+    const val ALWAYS_EMIT_LOCATION = "Always emit location"
     const val BACKGROUND_LOCATION_PERMISSION = "Background Location Permission"
     const val BACKGROUND_LOCATION_PERMISSION_DENIED = "Background location was denied on first ask. Manually allow in settings."
-    const val BACKGROUND_LOCATION_PERMISSION_MESSAGE = "To track your location even when the app is closed, please allow background location access."
+    const val BACKGROUND_LOCATION_PERMISSION_MESSAGE = "To track your location even when the app is closed, please allow location access all the time."
+
+    const val FOREGROUND_LOCATION_PERMISSION = "Foreground Location Permission"
+    const val FOREGROUND_LOCATION_PERMISSION_MESSAGE = "To track your location when the app is being used, please allow location access while app while using the app."
 
     object RegistrationConstants {
         const val REGISTER: String = "Register"
@@ -22,7 +25,7 @@ object ConstantStrings {
     }
 
     object CoordinatesConstants {
-        const val EMIT_LOCATION = "Emit location"
+        const val EMIT_LOCATION = "Emit location in-app"
         const val OPEN_IN_GOOGLE_MAPS = "Open In Google Maps"
         const val YOU_ARE_HERE = "You Are Here"
     }

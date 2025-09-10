@@ -54,7 +54,7 @@ object PermissionManager: ViewModel() {
         )
     }
 
-    fun promptBackgroundLocation(context: Context) {
+    fun promptBackgroundLocationPermission(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationGranted(context)) {
             AlertDialog.Builder(context)
                 .setTitle(ConstantStrings.BACKGROUND_LOCATION_PERMISSION)
@@ -112,13 +112,13 @@ object PermissionManager: ViewModel() {
             }
 
             fineGrainedPermissionDialog = AlertDialog.Builder(context)
-                .setTitle(ConstantStrings.PERMISSION_REQUIRED)
-                .setMessage(ConstantStrings.PERMISSION_REQUIRED_LOCATION_MESSAGE)
-                .setPositiveButton(ConstantStrings.OPEN_SETTINGS) { _, _ ->
+                .setTitle(ConstantStrings.FOREGROUND_LOCATION_PERMISSION)
+                .setMessage(ConstantStrings.FOREGROUND_LOCATION_PERMISSION_MESSAGE)
+                .setPositiveButton(ConstantStrings.ALLOW) { _, _ ->
                     openAppPermissionSettings(context)
                     fineGrainedPermissionDialog = null
                 }
-                .setNegativeButton(ConstantStrings.CANCEL) { _, _ ->
+                .setNegativeButton(ConstantStrings.NO) { _, _ ->
                     fineGrainedPermissionDialog = null
                 }
                 .setOnDismissListener {
