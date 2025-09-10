@@ -2,7 +2,7 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gandor.mobile_locator.layers.data.constants.PanelEnum
+import com.gandor.mobile_locator.layers.ui.PanelEnum
 import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableException
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.ErrorThrower
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.BaseState

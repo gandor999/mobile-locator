@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
-import com.gandor.mobile_locator.layers.data.constants.PanelEnum
+import com.gandor.mobile_locator.layers.ui.PanelEnum
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 

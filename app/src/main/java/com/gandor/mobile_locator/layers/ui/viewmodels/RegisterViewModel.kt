@@ -2,7 +2,7 @@ package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
-import com.gandor.mobile_locator.layers.data.constants.PanelEnum
+import com.gandor.mobile_locator.layers.ui.PanelEnum
 import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User

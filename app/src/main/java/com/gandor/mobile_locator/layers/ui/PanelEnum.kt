@@ -1,4 +1,4 @@
-package com.gandor.mobile_locator.layers.data.constants
+package com.gandor.mobile_locator.layers.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -40,7 +40,7 @@ enum class PanelEnum(
 
     companion object {
         private fun getPanel(panel: PanelEnum): PanelEnum? {
-            return PanelEnum.entries.find { it == panel }
+            return entries.find { it == panel }
         }
 
         @Composable

@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gandor.mobile_locator.MainActivity
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
-import com.gandor.mobile_locator.layers.data.constants.PanelEnum
+import com.gandor.mobile_locator.layers.ui.PanelEnum
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.SuccessDialog
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
