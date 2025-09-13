@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.event.Event
 import com.gandor.mobile_locator.layers.data.managers.LocationManager

@@ -1,7 +1,6 @@
 package com.gandor.mobile_locator.layers.ui
 
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize

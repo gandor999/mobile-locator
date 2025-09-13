@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object LocationClient {
     private val retrofit = Retrofit.Builder()
-        .baseUrl(RemoteHosts.MOBILE_LOCATOR_HOST)
+        .baseUrl(RemoteHosts.MOBILE_LOCATOR_HOST + RemoteHosts.LOCATION_ENTRYPOINT)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

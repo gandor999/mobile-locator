@@ -1,17 +1,14 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
+import com.gandor.mobile_locator.launchWithHandler
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.data.retrofit.services.ApiResult
 import com.gandor.mobile_locator.layers.data.retrofit.services.location.LocationClient
 import com.gandor.mobile_locator.layers.data.retrofit.services.models.User
-import com.gandor.mobile_locator.layers.ui.composables.CoordinatesPage
-import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
+import com.gandor.mobile_locator.layers.ui.composables.LoginPage
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.RegisterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class RegisterViewModel() : BaseViewModel() {
     private val _registerState = MutableStateFlow(RegisterState())
@@ -38,7 +35,7 @@ class RegisterViewModel() : BaseViewModel() {
     }
 
     fun submit() {
-        viewModelScope.launch {
+        launchWithHandler {
             setIsLoading(true)
 
             val result = LocationClient.registerNewUser(
@@ -55,9 +52,7 @@ class RegisterViewModel() : BaseViewModel() {
             when(result) {
                 is ApiResult.Success -> {
                     DialogViewModel.showSuccessDialog(listOf(ConstantStrings.RegistrationConstants.REGISTER_SUCCESS))
-                    // TODO: move to login page
-
-                    switchPanels(CoordinatesPage)
+                    switchPages(LoginPage)
                 }
 
                 is ApiResult.Fail -> {

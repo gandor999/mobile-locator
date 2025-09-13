@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 sealed interface Page
 
 @Serializable
+object BlankPage: Page
+
+@Serializable
 object RegisterPage: Page
 
 @Serializable

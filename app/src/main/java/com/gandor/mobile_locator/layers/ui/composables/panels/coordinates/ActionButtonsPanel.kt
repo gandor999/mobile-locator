@@ -10,14 +10,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
 import com.gandor.mobile_locator.layers.ui.composables.SettingsPage
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
-import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("ContextCastToActivity")
@@ -35,7 +33,7 @@ fun ActionButtonsPanel(
         item {
             Button(
                 onClick = {
-                    coordinatesViewModel.switchPanels(SettingsPage)
+                    coordinatesViewModel.switchPages(SettingsPage)
                 }) {
                 Text(text = ConstantStrings.OPEN_SETTINGS)
             }

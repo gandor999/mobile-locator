@@ -1,13 +1,13 @@
 package com.gandor.mobile_locator.layers.ui.composables.panels.login
 
 import android.annotation.SuppressLint
-import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,6 +30,7 @@ fun LoginPanel(
 ) {
     val context = LocalContext.current
     val loginState = loginViewModel.loginState.collectAsState().value
+    val baseLoginState = loginViewModel.baseState.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -37,6 +38,11 @@ fun LoginPanel(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        if (baseLoginState.isLoading) {
+            CircularProgressIndicator()
+            return
+        }
+
         Text(
             text = ConstantStrings.LoginConstants.LOGIN,
             fontSize = ConstantNumbers.PANEL_NAME_FONT_SIZE.sp
@@ -62,13 +68,7 @@ fun LoginPanel(
 
         Button(
             onClick = {
-                loginViewModel.setAndroidId(
-                    Settings.Secure.getString(
-                        context.contentResolver,
-                        Settings.Secure.ANDROID_ID
-                    )
-                )
-                loginViewModel.loginConventionally()
+                loginViewModel.loginConventionally(context)
             }
         ) {
             Text(ConstantStrings.ButtonTextConstants.SUBMIT)

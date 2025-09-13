@@ -1,15 +1,14 @@
 package com.gandor.mobile_locator.layers.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.gandor.mobile_locator.launchWithHandler
 import com.gandor.mobile_locator.layers.data.constants.exceptions.ComposableException
 import com.gandor.mobile_locator.layers.ui.composables.Page
 import com.gandor.mobile_locator.layers.ui.viewmodels.interfaces.ErrorThrower
 import com.gandor.mobile_locator.layers.ui.viewmodels.states.BaseState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 open class BaseViewModel(): ViewModel(), ErrorThrower {
     private val _baseState = MutableStateFlow(BaseState())
@@ -40,8 +39,8 @@ open class BaseViewModel(): ViewModel(), ErrorThrower {
         }
     }
 
-    fun switchPanels(page: Page) {
-        viewModelScope.launch {
+    fun switchPages(page: Page) {
+        launchWithHandler {
             if (::navHostController.isInitialized) {
                 navHostController.navigate(page)
             }
@@ -51,7 +50,7 @@ open class BaseViewModel(): ViewModel(), ErrorThrower {
     }
 
     fun switchBackToRecentPanel() {
-        viewModelScope.launch {
+        launchWithHandler {
             if (::navHostController.isInitialized) {
                 navHostController.popBackStack()
             }
