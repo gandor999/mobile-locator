@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.data.constants.ConstantStrings
+import com.gandor.mobile_locator.layers.ui.composables.RegisterPage
 import com.gandor.mobile_locator.layers.ui.viewmodels.LoginViewModel
 
 @SuppressLint("HardwareIds")
@@ -71,7 +72,15 @@ fun LoginPanel(
                 loginViewModel.loginConventionally(context)
             }
         ) {
-            Text(ConstantStrings.ButtonTextConstants.SUBMIT)
+            Text(ConstantStrings.LoginConstants.LOGIN)
+        }
+
+        Button(
+            onClick = {
+                loginViewModel.switchPages(RegisterPage)
+            }
+        ) {
+            Text(ConstantStrings.RegistrationConstants.REGISTER)
         }
     }
 }
