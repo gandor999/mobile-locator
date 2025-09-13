@@ -19,6 +19,10 @@ object ConstantStrings {
     const val FOREGROUND_LOCATION_PERMISSION = "Foreground Location Permission"
     const val FOREGROUND_LOCATION_PERMISSION_MESSAGE = "To track your location when the app is being used, please allow location access while app while using the app."
 
+    object LoginConstants {
+        const val LOGIN: String = "Login"
+    }
+
     object RegistrationConstants {
         const val REGISTER: String = "Register"
         const val REGISTER_SUCCESS = "Registration was successful"

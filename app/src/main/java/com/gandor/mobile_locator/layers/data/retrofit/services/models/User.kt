@@ -7,5 +7,6 @@ data class User(
     val email: String? = "",
     val coordinateId: String? = "",
     val registeredContacts: List<String>? = listOf(""),
-    val coordinates: Coordinates? = Coordinates()
+    val coordinates: Coordinates? = Coordinates(),
+    val isLoggedIn: Boolean = false
 )

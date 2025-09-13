@@ -24,26 +24,16 @@ import com.gandor.mobile_locator.layers.data.constants.ConstantNumbers
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.ErrorDialog
 import com.gandor.mobile_locator.layers.ui.composables.dialogs.SuccessDialog
 import com.gandor.mobile_locator.layers.ui.composables.panels.coordinates.CoordinatesPanel
+import com.gandor.mobile_locator.layers.ui.composables.panels.login.LoginPanel
 import com.gandor.mobile_locator.layers.ui.composables.panels.register.RegisterPanel
 import com.gandor.mobile_locator.layers.ui.composables.panels.settings.SettingsPanel
 import com.gandor.mobile_locator.layers.ui.viewmodels.BaseViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.CoordinatesViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.DialogViewModel
+import com.gandor.mobile_locator.layers.ui.viewmodels.LoginViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.RegisterViewModel
 import com.gandor.mobile_locator.layers.ui.viewmodels.SettingsViewModel
 import kotlinx.serialization.Serializable
-
-@Serializable
-sealed interface Page
-
-@Serializable
-object RegisterPage: Page
-
-@Serializable
-object CoordinatesPage: Page
-
-@Serializable
-object SettingsPage: Page
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -54,13 +44,13 @@ fun MainComposable() {
     val registerViewModel: RegisterViewModel = viewModel()
     val coordinatesViewModel: CoordinatesViewModel = viewModel()
     val settingsViewModel: SettingsViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel()
 
     val errorDialogState = DialogViewModel.errorDialogState.collectAsState()
     val successDialogState = DialogViewModel.successDialogState.collectAsState()
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
 
     settingsViewModel.registerListener(coordinatesViewModel)
-
-    val settingsState = settingsViewModel.settingsState.collectAsState().value
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         settingsViewModel.syncPermissions(context)
@@ -97,11 +87,12 @@ fun MainComposable() {
 
         NavHost(
             navController = navController,
-            startDestination = CoordinatesPage,
+            startDestination = if (loginViewModel.isUserLoggedInAlready()) CoordinatesPage else LoginPage,
         ) {
             composable<RegisterPage> { RegisterPanel(settingsViewModel, registerViewModel) }
             composable<CoordinatesPage> { CoordinatesPanel(settingsViewModel, coordinatesViewModel) }
             composable<SettingsPage> { SettingsPanel(settingsViewModel) }
+            composable<LoginPage> { LoginPanel(loginViewModel) }
         }
     }
 }
