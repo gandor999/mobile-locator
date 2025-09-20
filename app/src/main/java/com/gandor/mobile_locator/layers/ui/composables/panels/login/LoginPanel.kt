@@ -93,8 +93,6 @@ fun LoginPanel(
                     ) {
                         Text(ConstantStrings.LoginConstants.SUBMIT)
                     }
-
-
                 }
             },
             bottomBar = {
@@ -120,7 +118,7 @@ fun LoginPanel(
                     }
 
                     Text(
-                        text = "Forgot username or password",
+                        text = ConstantStrings.LoginConstants.FORGOT_USERNAME_OR_PASSWORD,
                         modifier = Modifier.clickable(
                             onClick = {
                                 Log.d("GEO TEST", "Forgot username or password was clicked")
