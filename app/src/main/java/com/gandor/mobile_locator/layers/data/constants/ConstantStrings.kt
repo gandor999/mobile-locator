@@ -21,11 +21,15 @@ object ConstantStrings {
 
     object LoginConstants {
         const val LOGIN: String = "Login"
+        const val SUBMIT: String = "Submit"
+        const val ALREADY_HAVE_AN_ACCOUNT: String = "Already have an account?"
+        const val FORGOT_USERNAME_OR_PASSWORD: String = "Forgot username or password?"
     }
 
     object RegistrationConstants {
         const val REGISTER: String = "Register"
         const val REGISTER_SUCCESS = "Registration was successful"
+        const val DONT_HAVE_AN_ACCOUNT = "Don't have an account?"
     }
 
     object CoordinatesConstants {
